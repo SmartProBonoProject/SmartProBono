@@ -7,18 +7,19 @@ import os
 app = Flask(__name__)
 CORS(app, resources={
     r"/api/*": {
-        "origins": ["http://localhost:3000"]  # Or your specific frontend origin
+        "origins": ["http://localhost:3000"]
     }
 })
 
-model_name = "tiiuae/falcon-rw-1b"  # Using smaller 1B model
+model_name = "tiiuae/falcon-3b"  # Changed to 3B model
 
-# Load model without quantization for Mac compatibility
+# Load model with optimizations
 model = AutoModelForCausalLM.from_pretrained(
     model_name,
     device_map="auto",
     trust_remote_code=False,
-    torch_dtype=torch.float16,  # Changed to float16 to reduce memory usage
+    torch_dtype=torch.float16,  # Using float16 for memory efficiency
+    load_in_8bit=True          # Enable 8-bit quantization
 )
 
 tokenizer = AutoTokenizer.from_pretrained(
@@ -34,15 +35,15 @@ def legal_assistant():
     data = request.json
     prompt = data.get("prompt", "")
 
-    # Move inputs to the same device as the model
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
     
-    # Generate response
     outputs = model.generate(
         inputs["input_ids"],
-        max_length=500,
+        max_length=256,        # Shorter responses to save memory
         temperature=0.7,
-        pad_token_id=tokenizer.eos_token_id
+        pad_token_id=tokenizer.eos_token_id,
+        num_beams=2,          # Simple beam search
+        early_stopping=True    # Stop when possible
     )
     response = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
