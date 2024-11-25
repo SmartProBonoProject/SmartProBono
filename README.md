@@ -1,2 +1,1 @@
 # SmartProBono
-# SmartProBonoApp
