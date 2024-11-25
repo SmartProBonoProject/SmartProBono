@@ -7,11 +7,14 @@ import os
 app = Flask(__name__)
 CORS(app, resources={
     r"/api/*": {
-        "origins": ["http://localhost:3000"]
+        "origins": ["http://localhost:3000", "https://*.onrender.com"]
     }
 })
 
 model_name = "tiiuae/falcon-3b"  # Changed to 3B model
+
+# Add this near the top
+HF_TOKEN = os.environ.get("HF_TOKEN")
 
 # Load model with optimizations
 model = AutoModelForCausalLM.from_pretrained(
@@ -19,12 +22,14 @@ model = AutoModelForCausalLM.from_pretrained(
     device_map="auto",
     trust_remote_code=False,
     torch_dtype=torch.float16,  # Using float16 for memory efficiency
-    load_in_8bit=True          # Enable 8-bit quantization
+    load_in_8bit=True,          # Enable 8-bit quantization
+    token=HF_TOKEN  # Add this line
 )
 
 tokenizer = AutoTokenizer.from_pretrained(
     model_name,
-    trust_remote_code=False
+    trust_remote_code=False,
+    token=HF_TOKEN  # Add this line
 )
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
@@ -50,4 +55,5 @@ def legal_assistant():
     return jsonify({"response": response})
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
