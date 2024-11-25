@@ -11,7 +11,7 @@ CORS(app, resources={
     }
 })
 
-model_name = "tiiuae/falcon-3b"  # Changed to 3B model
+model_name = "tiiuae/falcon-rw-1b"
 
 # Add this near the top
 HF_TOKEN = os.environ.get("HF_TOKEN")
@@ -20,7 +20,7 @@ HF_TOKEN = os.environ.get("HF_TOKEN")
 model = AutoModelForCausalLM.from_pretrained(
     model_name,
     device_map="auto",
-    trust_remote_code=False,
+    trust_remote_code=True,
     torch_dtype=torch.float16,  # Using float16 for memory efficiency
     load_in_8bit=True,          # Enable 8-bit quantization
     token=HF_TOKEN  # Add this line
@@ -28,7 +28,7 @@ model = AutoModelForCausalLM.from_pretrained(
 
 tokenizer = AutoTokenizer.from_pretrained(
     model_name,
-    trust_remote_code=False,
+    trust_remote_code=True,
     token=HF_TOKEN  # Add this line
 )
 
