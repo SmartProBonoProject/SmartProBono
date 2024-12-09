@@ -34,6 +34,9 @@ models['contracts'], tokenizers['contracts'] = load_model("facebook/opt-125m", "
 # Rights model (medium size for broader knowledge)
 models['rights'], tokenizers['rights'] = load_model("gpt2", "rights")
 
+# Rights specific model (specific rights and their implications)
+models['rights_specific'], tokenizers['rights_specific'] = load_model("gpt2", "rights_specific")
+
 # Procedures model (larger for complex explanations)
 models['procedures'], tokenizers['procedures'] = load_model("facebook/opt-350m", "procedures")
 
@@ -131,6 +134,39 @@ def rights_assistant():
         total_time = time.time() - start_time
         
         print(f"\nRights Question Timing:")
+        print(f"Model Time: {model_time:.2f}s")
+        print(f"Total Time: {total_time:.2f}s")
+        print(f"Q: {user_prompt}")
+        print(f"A: {response}\n")
+        
+        return jsonify({
+            "response": response,
+            "timing": {
+                "model_time": f"{model_time:.2f}s",
+                "total_time": f"{total_time:.2f}s"
+            }
+        })
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/legal/rights/specific", methods=["POST"])
+def rights_specific_assistant():
+    start_time = time.time()
+    user_prompt = request.json.get('prompt')
+    
+    prompt = (
+        "Explain these specific rights and their implications: "
+        f"{user_prompt}"
+    )
+    
+    try:
+        model_start_time = time.time()
+        response = generate_response(prompt, "rights_specific", max_length=250, temperature=0.5)
+        model_time = time.time() - model_start_time
+        total_time = time.time() - start_time
+        
+        print(f"\nRights Specific Question Timing:")
         print(f"Model Time: {model_time:.2f}s")
         print(f"Total Time: {total_time:.2f}s")
         print(f"Q: {user_prompt}")
