@@ -9,7 +9,7 @@ import {
   IconButton,
   Drawer,
   List,
-  ListItem,
+  ListItemButton,
   ListItemText,
   useTheme,
   useMediaQuery 
@@ -45,17 +45,16 @@ function Navigation() {
   const drawer = (
     <List>
       {navItems.map((item) => (
-        <ListItem 
-          button 
-          key={item.name} 
-          component={Link} 
+        <ListItemButton
+          key={item.name}
+          component={Link}
           to={item.path}
           selected={location.pathname === item.path}
           onClick={handleDrawerToggle}
         >
           {item.icon}
           <ListItemText primary={item.name} sx={{ ml: 2 }} />
-        </ListItem>
+        </ListItemButton>
       ))}
     </List>
   );

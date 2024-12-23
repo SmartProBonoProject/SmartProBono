@@ -3,7 +3,8 @@ import {
   Paper, 
   Typography, 
   Box,
-  Divider 
+  Divider,
+  Grid
 } from '@mui/material';
 
 function PrintableContract({ content, metadata }) {
