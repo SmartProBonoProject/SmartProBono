@@ -1,9 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material';
 import { I18nextProvider } from 'react-i18next';
 import { theme } from './components/theme';
 import i18n from './i18n';
+import config from './config';
 
 // Existing Components
 import Navigation from './components/Navigation';
