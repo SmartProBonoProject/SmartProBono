@@ -37,12 +37,6 @@ function HomePage() {
       path: '/rights'
     },
     {
-      title: "Legal Procedures",
-      description: "Step-by-step guidance through legal processes and procedures",
-      icon: <ListAltIcon sx={{ fontSize: 40, color: '#1976d2' }} />,
-      path: '/procedures'
-    },
-    {
       title: "Immigration Help",
       description: "Support for visa applications and immigration processes",
       icon: <FlightIcon sx={{ fontSize: 40, color: '#1976d2' }} />,
@@ -53,6 +47,12 @@ function HomePage() {
       description: "Connect with legal professionals offering free services",
       icon: <BuildIcon sx={{ fontSize: 40, color: '#1976d2' }} />,
       path: '/services'
+    },
+    {
+      title: "Resources",
+      description: "Access helpful legal resources and guides",
+      icon: <ListAltIcon sx={{ fontSize: 40, color: '#1976d2' }} />,
+      path: '/resources'
     },
     {
       title: "AI Legal Assistant",
@@ -69,8 +69,8 @@ function HomePage() {
         sx={{ 
           background: 'linear-gradient(45deg, #1976d2 30%, #2196f3 90%)',
           color: 'white',
-          pt: { xs: 8, md: 12 },
-          pb: { xs: 8, md: 12 },
+          pt: { xs: 6, md: 8 },
+          pb: { xs: 6, md: 8 },
           position: 'relative',
           overflow: 'hidden'
         }}
@@ -88,11 +88,11 @@ function HomePage() {
               linear-gradient(45deg, transparent 45%, #ffffff 45%, #ffffff 55%, transparent 55%),
               linear-gradient(-45deg, transparent 45%, #ffffff 45%, #ffffff 55%, transparent 55%)
             `,
-            backgroundSize: '30px 30px'
+            backgroundSize: '20px 20px'
           }}
         />
         
-        <Container maxWidth="lg" sx={{ position: 'relative' }}>
+        <Container maxWidth="lg">
           <Grid container spacing={4} alignItems="center">
             <Grid item xs={12} md={7}>
               <Typography 
@@ -100,8 +100,9 @@ function HomePage() {
                 gutterBottom 
                 sx={{ 
                   fontWeight: 800,
-                  fontSize: { xs: '2.5rem', md: '3.5rem' },
-                  textShadow: '2px 2px 4px rgba(0,0,0,0.2)'
+                  fontSize: { xs: '2rem', md: '2.75rem' },
+                  textShadow: '2px 2px 4px rgba(0,0,0,0.2)',
+                  lineHeight: 1.2
                 }}
               >
                 Free Legal Help Made Simple
@@ -113,7 +114,8 @@ function HomePage() {
                   mb: 4, 
                   opacity: 0.9,
                   maxWidth: '600px',
-                  lineHeight: 1.5
+                  lineHeight: 1.5,
+                  fontSize: { xs: '1.1rem', md: '1.25rem' }
                 }}
               >
                 Get instant legal assistance, document generation, and professional guidance - all in one place.
@@ -125,9 +127,9 @@ function HomePage() {
                   startIcon={<ChatIcon />}
                   onClick={() => navigate('/legal-chat')}
                   sx={{ 
-                    py: 2, 
-                    px: 4,
-                    fontSize: '1.2rem',
+                    py: 1.5, 
+                    px: 3,
+                    fontSize: '1rem',
                     backgroundColor: 'white',
                     color: '#1976d2',
                     '&:hover': {
@@ -143,9 +145,9 @@ function HomePage() {
                   startIcon={<BalanceIcon />}
                   onClick={() => navigate('/services')}
                   sx={{ 
-                    py: 2, 
-                    px: 4,
-                    fontSize: '1.2rem',
+                    py: 1.5, 
+                    px: 3,
+                    fontSize: '1rem',
                     borderColor: 'white',
                     color: 'white',
                     '&:hover': {
@@ -173,7 +175,7 @@ function HomePage() {
                 flexDirection: 'column', 
                 gap: 2,
                 width: '100%',
-                maxWidth: 400,
+                maxWidth: 360,
                 p: 2
               }}>
                 <Paper 
@@ -184,14 +186,14 @@ function HomePage() {
                     borderRadius: 2
                   }}
                 >
-                  <Typography variant="h6" color="primary" gutterBottom>
+                  <Typography variant="h6" color="primary" gutterBottom sx={{ fontSize: '1.1rem', fontWeight: 600 }}>
                     Why Choose Us?
                   </Typography>
                   <Box component="ul" sx={{ m: 0, pl: 2, color: 'text.primary' }}>
-                    <Typography component="li" sx={{ mb: 1 }}>24/7 AI-powered legal assistance</Typography>
-                    <Typography component="li" sx={{ mb: 1 }}>Free document generation</Typography>
-                    <Typography component="li" sx={{ mb: 1 }}>Expert legal guidance</Typography>
-                    <Typography component="li">Secure & confidential</Typography>
+                    <Typography component="li" sx={{ mb: 1, fontSize: '0.95rem' }}>24/7 AI-powered legal assistance</Typography>
+                    <Typography component="li" sx={{ mb: 1, fontSize: '0.95rem' }}>Free document generation</Typography>
+                    <Typography component="li" sx={{ mb: 1, fontSize: '0.95rem' }}>Expert legal guidance</Typography>
+                    <Typography component="li" sx={{ fontSize: '0.95rem' }}>Secure & confidential</Typography>
                   </Box>
                 </Paper>
               </Box>
@@ -237,7 +239,7 @@ function HomePage() {
                 </CardContent>
                 <Divider />
                 <CardActions sx={{ justifyContent: 'center', p: 2 }}>
-                  <Button 
+                  <Button
                     onClick={() => navigate(feature.path)}
                     variant="outlined"
                     size="large"

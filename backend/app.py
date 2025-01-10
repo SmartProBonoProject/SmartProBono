@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
-from routes.legal_ai import legal_ai
+from routes.legal_ai import bp as legal_ai
 from routes.contracts import contracts
 from dotenv import load_dotenv
 import os

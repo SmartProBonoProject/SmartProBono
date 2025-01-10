@@ -1,89 +1,67 @@
-# SmartProBono - Free Legal Aid Platform
+# SmartProBono - Free Legal Services Platform
 
-SmartProBono is a comprehensive legal assistance platform designed to help people access free legal services, guidance, and resources. Our mission is to make legal help accessible to everyone, especially those who cannot afford traditional legal services.
+SmartProBono is a modern, user-friendly platform designed to make legal assistance accessible to everyone. Our AI-powered platform provides free legal guidance, document generation, and professional resources to those who need it most.
 
-## Our Mission
-To bridge the justice gap by providing free, accessible legal assistance and resources to underserved communities. We believe everyone deserves access to quality legal help, regardless of their financial situation.
+## Features
 
-## Core Services
+### 🤖 AI-Powered Legal Chat
+- 24/7 instant legal assistance
+- Personalized guidance and recommendations
+- Clear explanations of legal concepts
+- Step-by-step process navigation
 
-### 1. Legal AI Assistant
-- Interactive chat interface for immediate legal guidance
-- Helps understand legal rights and procedures
-- Answers common legal questions
-- Provides step-by-step guidance for legal processes
+### 📄 Document Services
+- Free legal document generation
+- Contract review and analysis
+- Document templates and forms
+- Multi-language support
 
-### 2. Document Services
-- Access to essential legal documents and forms
-- Assistance with document completion
-- Multi-language support for better accessibility
-- Free document review and guidance
+### ⚖️ Legal Rights Information
+- Comprehensive rights education
+- Interactive guidance
+- Up-to-date legal information
+- Easy-to-understand explanations
 
-### 3. Immigration Support
-- Guidance on immigration procedures
-- Access to immigration forms
-- Information about immigration rights
+### 🌐 Immigration Support
+- Visa application assistance
+- Immigration process guidance
+- Document preparation help
 - Multi-language resources
 
-### 4. Legal Rights Education
-- Comprehensive information about legal rights
-- Educational resources and guides
-- Step-by-step procedures
-- Access to legal terminology and explanations
+### 💼 Pro Bono Services
+- Connection to legal professionals
+- Free consultation matching
+- Resource directory
+- Community support
 
-### 5. Resource Center
-- Free legal forms and templates
-- Court procedure guides
-- Legal rights information
-- Community legal resources
-
-## Technology Features
-
-### User-Friendly Interface
-- Clean, intuitive design
-- Mobile-responsive layout
-- Multi-language support
-- Accessible on all devices
-
-### AI-Powered Assistance
-- Real-time legal guidance
-- Document explanation
-- Rights clarification
-- Procedure navigation
-
-### Secure Document Handling
-- Safe document generation
-- Private information protection
-- Secure form submission
-- Confidential communication
-
-## Technical Stack
+## Technology Stack
 
 ### Frontend
-- React.js
-- Material-UI (MUI)
-- React Router
+- React.js 18
+- Material-UI (MUI) v5
+- React Router v6
 - Modern responsive design
+- Progressive Web App capabilities
 
 ### Backend
 - Python Flask
-- OpenAI Integration
-- PDF Generation
+- OpenAI GPT Integration
 - RESTful API
+- Secure document handling
 
 ## Getting Started
 
 ### Prerequisites
-- Node.js (v14 or higher)
+- Node.js (v16 or higher)
 - Python 3.8 or higher
-- pip (Python package manager)
+- npm or yarn package manager
 
 ### Installation
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/BTheCoderr/smartProBonoAPP.git
-cd smartProBonoAPP
+git clone https://github.com/yourusername/smart-pro-bono.git
+cd smart-pro-bono
 ```
 
 2. Install frontend dependencies:
@@ -95,19 +73,20 @@ npm install
 3. Install backend dependencies:
 ```bash
 cd backend
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+python -m venv venv
+source venv/bin/activate  # On Windows: .\venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
 4. Set up environment variables:
-Create `.env` file in the backend directory with:
-```
+Create `.env` file in the backend directory:
+```env
 OPENAI_API_KEY=your_api_key
-PORT=5001
+FLASK_ENV=development
+PORT=5000
 ```
 
-### Running the Application
+### Running Locally
 
 1. Start the backend server:
 ```bash
@@ -121,25 +100,46 @@ cd frontend
 npm start
 ```
 
-The application will be available at `http://localhost:3000`
+Visit `http://localhost:3000` to view the application.
 
-## Future Enhancements
-- Enhanced AI capabilities for more complex legal guidance
-- Additional language support
-- Expanded document library
-- Community legal resource directory
-- Integration with pro bono legal services
+## Deployment
+
+The frontend is deployed on GitHub Pages and can be accessed at: [SmartProBono App](https://bthecoderr.github.io/pro-bono-app/)
+
+To deploy your own instance:
+
+1. Update the `homepage` in `package.json`:
+```json
+{
+  "homepage": "https://yourusername.github.io/your-repo-name"
+}
+```
+
+2. Deploy to GitHub Pages:
+```bash
+npm run deploy
+```
 
 ## Contributing
-We welcome contributions that help make legal aid more accessible! Please feel free to submit a Pull Request.
+
+We welcome contributions! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## License
-This project is licensed under the MIT License - see the LICENSE file for details.
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contact
-For support, partnership inquiries, or to get involved in making legal aid more accessible, please contact us through the application's contact form.
+
+For questions, support, or collaboration opportunities, please reach out through our [contact form](https://bthecoderr.github.io/pro-bono-app/contact).
 
 ## Acknowledgments
-- OpenAI for AI capabilities
-- Material-UI for the component library
-- All contributors and supporters helping to make legal aid accessible to everyone
+
+- OpenAI for powering our AI capabilities
+- Material-UI team for the excellent component library
+- All contributors and supporters making legal aid more accessible

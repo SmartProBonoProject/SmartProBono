@@ -130,10 +130,11 @@ function Navigation() {
                 color: 'primary.main',
                 display: 'flex',
                 alignItems: 'center',
-                mr: 3
+                mr: 3,
+                minWidth: { xs: 'auto', md: '200px' }
               }}
             >
-              <Logo variant={isMobile ? 'small' : 'default'} showText={!isMobile} />
+              <Logo variant="light" size={isMobile ? "small" : "medium"} />
             </Box>
 
             {!isMobile && (
