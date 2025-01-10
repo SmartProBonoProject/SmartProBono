@@ -6,30 +6,39 @@ import { theme } from './components/theme';
 import i18n from './i18n';
 import config from './config';
 
-// Existing Components
+// Components
 import Navigation from './components/Navigation';
 import ErrorBoundary from './components/ErrorBoundary';
+import LegalAIChat from './components/LegalAIChat';
+
+// Pages
 import HomePage from './pages/HomePage';
 import ContractsPage from './pages/ContractsPage';
-
-// Core Features
-import LegalAIChat from './components/LegalAIChat';
+import Immigration from './pages/Immigration';
+import Resources from './pages/Resources';
+import RightsPage from './pages/RightsPage';
+import Services from './pages/Services';
+import Contact from './pages/Contact';
 
 function App() {
   return (
     <I18nextProvider i18n={i18n}>
       <ThemeProvider theme={theme}>
         <ErrorBoundary>
-          <Router>
-            <Navigation />
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/contracts" element={<ContractsPage />} />
-              <Route path="/legal-chat" element={<LegalAIChat />} />
-              {/* Remove or comment out until component is ready */}
-              {/* <Route path="/immigration" element={<ImmigrationPage />} /> */}
-              {/* Other existing routes */}
-            </Routes>
+          <Router basename={config.basename}>
+            <div className="App">
+              <Navigation />
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/contracts" element={<ContractsPage />} />
+                <Route path="/immigration" element={<Immigration />} />
+                <Route path="/resources" element={<Resources />} />
+                <Route path="/rights" element={<RightsPage />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/legal-chat" element={<LegalAIChat />} />
+              </Routes>
+            </div>
           </Router>
         </ErrorBoundary>
       </ThemeProvider>

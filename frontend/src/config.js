@@ -1,8 +1,16 @@
 const config = {
-  apiUrl: process.env.REACT_APP_API_URL || 'http://localhost:3001',
-  wsUrl: process.env.REACT_APP_WS_URL || 'http://localhost:3001',
-  environment: process.env.REACT_APP_ENV || 'development',
-  isProduction: process.env.REACT_APP_ENV === 'production'
+  apiUrl: process.env.NODE_ENV === 'production' 
+    ? 'https://your-production-api.com' 
+    : 'http://localhost:5001',
+  basename: process.env.NODE_ENV === 'production' 
+    ? '/smartProBonoAPP' 
+    : '',
+  endpoints: {
+    rights: '/api/legal/rights',
+    chat: '/api/legal/chat',
+    documents: '/api/documents',
+    immigration: '/api/immigration'
+  }
 };
 
 export default config; 

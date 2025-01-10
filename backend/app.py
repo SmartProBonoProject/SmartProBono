@@ -1,17 +1,26 @@
 from flask import Flask
 from flask_cors import CORS
-from routes import auth, documents, legal_ai, immigration
+from routes.legal_ai import legal_ai
+from routes.contracts import contracts
+from dotenv import load_dotenv
+import os
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-# Register routes
-app.register_blueprint(auth.bp)
-app.register_blueprint(documents.bp)
-app.register_blueprint(legal_ai.bp)
-app.register_blueprint(immigration.bp)
+# Register blueprints
+app.register_blueprint(legal_ai)
+app.register_blueprint(contracts)
+
+@app.route('/')
+def home():
+    return 'SmartProBono API is running!'
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5001))
+    app.run(debug=True, port=port)
 
 
