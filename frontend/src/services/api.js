@@ -1,61 +1,119 @@
-import config from '../config';
+import axios from 'axios';
 
-const API_URL = config.apiUrl;
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://smartprobono.onrender.com';
 
-export const generateContract = async (template, formData, language) => {
-  try {
-    const response = await fetch(`${API_URL}/api/contracts/generate`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        template,
-        formData,
-        language
-      })
-    });
+// Create axios instance with default config
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Failed to generate document');
+// Legal Rights API
+export const legalRightsApi = {
+  getRights: async (category) => {
+    try {
+      const response = await api.get(`/api/legal/rights/${category}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching legal rights:', error);
+      throw error;
     }
-
-    // Get the blob from the response
-    const blob = await response.blob();
-    
-    // Create a URL for the blob
-    const url = window.URL.createObjectURL(blob);
-    
-    // Create a temporary link element
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${template.toLowerCase().replace(/ /g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
-    
-    // Append to body, click and remove
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    // Clean up the URL
-    window.URL.revokeObjectURL(url);
-    
-    return true;
-  } catch (error) {
-    console.error('Error generating contract:', error);
-    throw error;
-  }
+  },
 };
 
-export const getTemplates = async () => {
-  try {
-    const response = await fetch(`${API_URL}/api/contracts/templates`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch templates');
+// Legal Chat API
+export const legalChatApi = {
+  sendMessage: async (message) => {
+    try {
+      const response = await api.post('/api/legal/chat', { message });
+      return response.data;
+    } catch (error) {
+      console.error('Error sending message:', error);
+      throw error;
     }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching templates:', error);
-    throw error;
+  },
+};
+
+// Documents API
+export const documentsApi = {
+  generateDocument: async (template, data) => {
+    try {
+      const response = await api.post('/api/documents/generate', {
+        template,
+        data,
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error generating document:', error);
+      throw error;
+    }
+  },
+  
+  getTemplates: async () => {
+    try {
+      const response = await api.get('/api/documents/templates');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching templates:', error);
+      throw error;
+    }
+  },
+};
+
+// Immigration Services API
+export const immigrationApi = {
+  getVisaRequirements: async (visaType) => {
+    try {
+      const response = await api.get(`/api/immigration/visa-requirements/${visaType}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching visa requirements:', error);
+      throw error;
+    }
+  },
+  
+  submitVisaApplication: async (applicationData) => {
+    try {
+      const response = await api.post('/api/immigration/apply', applicationData);
+      return response.data;
+    } catch (error) {
+      console.error('Error submitting visa application:', error);
+      throw error;
+    }
+  },
+};
+
+// Error interceptor
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response) {
+      // Handle specific error status codes
+      switch (error.response.status) {
+        case 401:
+          // Handle unauthorized
+          console.error('Unauthorized access');
+          break;
+        case 403:
+          // Handle forbidden
+          console.error('Forbidden access');
+          break;
+        case 404:
+          // Handle not found
+          console.error('Resource not found');
+          break;
+        case 500:
+          // Handle server error
+          console.error('Server error');
+          break;
+        default:
+          console.error('API error:', error.response.data);
+      }
+    }
+    return Promise.reject(error);
   }
-}; 
+);
+
+export default api; 
