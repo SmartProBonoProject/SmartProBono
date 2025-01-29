@@ -28,6 +28,51 @@ export const en = {
         }
       }
     },
+    expungement: {
+      steps: {
+        eligibility: 'Check Eligibility',
+        stateRules: 'State Rules',
+        caseDetails: 'Case Details',
+        documents: 'Documents',
+        review: 'Review'
+      },
+      eligibility: {
+        title: 'Check Your Eligibility',
+        state: 'Select Your State',
+        caseType: 'Type of Case',
+        description: 'Let\'s check if your case is eligible for expungement under your state\'s laws.'
+      },
+      stateRules: {
+        title: 'State-Specific Rules',
+        description: 'Here are the rules and requirements for expungement in your state.',
+        waitingPeriod: 'Waiting Period',
+        eligibilityCriteria: 'Eligibility Criteria',
+        requiredDocuments: 'Required Documents'
+      },
+      caseDetails: {
+        title: 'Case Information',
+        caseNumber: 'Case Number',
+        courtName: 'Court Name',
+        convictionDate: 'Date of Conviction',
+        charges: 'Charges',
+        sentence: 'Sentence',
+        completionDate: 'Sentence Completion Date'
+      },
+      documents: {
+        title: 'Required Documents',
+        upload: 'Upload Document',
+        generate: 'Generate Document',
+        preview: 'Preview',
+        download: 'Download'
+      },
+      review: {
+        title: 'Review Your Application',
+        success: 'Your expungement application is ready for submission!',
+        summary: 'Application Summary',
+        submit: 'Submit Application',
+        save: 'Save for Later'
+      }
+    },
     legalRights: {
       title: 'Know Your Rights',
       sections: {
@@ -65,6 +110,7 @@ export const en = {
       save: 'Save',
       delete: 'Delete',
       edit: 'Edit',
-      view: 'View'
+      view: 'View',
+      finish: 'Finish'
     }
 };

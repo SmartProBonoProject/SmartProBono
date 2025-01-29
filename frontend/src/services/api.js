@@ -60,6 +60,37 @@ export const documentsApi = {
       throw error;
     }
   },
+
+  // New document endpoints
+  saveDocument: async (documentData) => {
+    try {
+      const response = await api.post('/api/documents/save', documentData);
+      return response.data;
+    } catch (error) {
+      console.error('Error saving document:', error);
+      throw error;
+    }
+  },
+
+  getDocumentHistory: async () => {
+    try {
+      const response = await api.get('/api/documents/history');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching document history:', error);
+      throw error;
+    }
+  },
+
+  submitToEFiling: async (documentId, courtInfo) => {
+    try {
+      const response = await api.post(`/api/documents/${documentId}/efile`, courtInfo);
+      return response.data;
+    } catch (error) {
+      console.error('Error submitting to e-filing:', error);
+      throw error;
+    }
+  }
 };
 
 // Immigration Services API
@@ -83,6 +114,59 @@ export const immigrationApi = {
       throw error;
     }
   },
+};
+
+// Expungement Services API
+export const expungementApi = {
+  checkEligibility: async (caseData) => {
+    try {
+      const response = await api.post('/api/expungement/check-eligibility', caseData);
+      return response.data;
+    } catch (error) {
+      console.error('Error checking expungement eligibility:', error);
+      throw error;
+    }
+  },
+
+  getStateRules: async (state) => {
+    try {
+      const response = await api.get(`/api/expungement/rules/${state}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching state rules:', error);
+      throw error;
+    }
+  },
+
+  startExpungementProcess: async (caseData) => {
+    try {
+      const response = await api.post('/api/expungement/start', caseData);
+      return response.data;
+    } catch (error) {
+      console.error('Error starting expungement process:', error);
+      throw error;
+    }
+  },
+
+  saveProgress: async (caseId, progressData) => {
+    try {
+      const response = await api.put(`/api/expungement/${caseId}/progress`, progressData);
+      return response.data;
+    } catch (error) {
+      console.error('Error saving progress:', error);
+      throw error;
+    }
+  },
+
+  getRequiredDocuments: async (state, caseType) => {
+    try {
+      const response = await api.get(`/api/expungement/documents/${state}/${caseType}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching required documents:', error);
+      throw error;
+    }
+  }
 };
 
 // Error interceptor
