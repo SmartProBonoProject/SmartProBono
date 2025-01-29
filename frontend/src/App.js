@@ -4,7 +4,6 @@ import { ThemeProvider } from '@mui/material';
 import { I18nextProvider } from 'react-i18next';
 import { theme } from './components/theme';
 import i18n from './i18n';
-import config from './config';
 
 // Components
 import Navigation from './components/Navigation';
@@ -25,7 +24,7 @@ function App() {
     <I18nextProvider i18n={i18n}>
       <ThemeProvider theme={theme}>
         <ErrorBoundary>
-          <Router basename={config.basename}>
+          <Router>
             <div className="App">
               <Navigation />
               <Routes>

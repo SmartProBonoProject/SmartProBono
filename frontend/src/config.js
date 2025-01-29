@@ -1,10 +1,5 @@
 const config = {
-  apiUrl: process.env.NODE_ENV === 'production' 
-    ? 'https://your-production-api.com' 
-    : 'http://localhost:5001',
-  basename: process.env.NODE_ENV === 'production' 
-    ? '/smartProBonoAPP' 
-    : '',
+  apiUrl: process.env.REACT_APP_API_URL || 'http://localhost:5001',
   endpoints: {
     rights: '/api/legal/rights',
     chat: '/api/legal/chat',

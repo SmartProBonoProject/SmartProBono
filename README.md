@@ -83,8 +83,35 @@ Create `.env` file in the backend directory:
 ```env
 OPENAI_API_KEY=your_api_key
 FLASK_ENV=development
-PORT=5000
+PORT=5001
 ```
+
+### Restarting the Application
+
+When you need to restart the application after closing it, follow these steps:
+
+1. Open two terminal windows - one for the backend and one for the frontend
+
+2. Start the Backend Server:
+```bash
+cd backend                          # Navigate to backend directory
+source venv/bin/activate           # Activate virtual environment (On Windows: .\venv\Scripts\activate)
+python app.py                      # Start the Flask server
+```
+The backend server should start on http://localhost:5001
+
+3. Start the Frontend Development Server (in a new terminal):
+```bash
+cd frontend                        # Navigate to frontend directory
+npm start                         # Start the React development server
+```
+The frontend should automatically open in your browser at http://localhost:3000
+
+Common Issues and Solutions:
+- If port 5001 is in use, you can change the port in the `.env` file
+- If you see import errors, ensure you're in the virtual environment
+- If the frontend doesn't connect to the backend, check that both servers are running
+- If you see "module not found" errors, run `npm install` in the frontend directory or `pip install -r requirements.txt` in the backend directory
 
 ### Running Locally
 
