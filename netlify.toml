@@ -1,7 +1,13 @@
 [build]
   base = "frontend"
   publish = "build"
-  command = "npm cache clean --force && rm -rf node_modules package-lock.json && npm install --legacy-peer-deps && npm run build"
+  command = """
+    npm install -g npm@8 &&
+    npm cache clean --force &&
+    rm -rf node_modules package-lock.json &&
+    npm install --legacy-peer-deps &&
+    CI=false npm run build
+  """
 
 [[redirects]]
   from = "/*"
