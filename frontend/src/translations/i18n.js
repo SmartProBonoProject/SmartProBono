@@ -1,8 +1,8 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
-import { en } from './translations/en';
-import { es } from './translations/es';
+import { en } from './en';
+import { es } from './es';
 
 i18n
   .use(LanguageDetector)
@@ -15,7 +15,10 @@ i18n
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false
-    }
+    },
+    returnObjects: true,
+    returnEmptyString: false,
+    returnNull: false
   });
 
 export default i18n;

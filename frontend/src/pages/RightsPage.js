@@ -20,6 +20,7 @@ import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import HomeIcon from '@mui/icons-material/Home';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import config from '../config';
 
 function RightsPage() {
   const [prompt, setPrompt] = useState('');
@@ -71,7 +72,7 @@ function RightsPage() {
     setLoading(true);
     
     try {
-      const response = await fetch('http://localhost:5001/api/legal/rights', {
+      const response = await fetch(`${config.apiUrl}${config.endpoints.rights}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: prompt.trim() })

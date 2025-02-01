@@ -36,7 +36,7 @@ const LegalAIChat = () => {
     try {
       const response = await sendMessage(userMessage);
       // Add AI response to chat
-      setChatHistory(prev => [...prev, { type: 'ai', text: response.message }]);
+      setChatHistory(prev => [...prev, { type: 'ai', text: response.response }]);
     } catch (err) {
       // Error is handled by useApi hook
       console.error('Chat error:', err);
@@ -104,10 +104,10 @@ const LegalAIChat = () => {
 
       <Box sx={{ mt: 2 }}>
         <Typography variant="subtitle2" gutterBottom>
-          {t('legalChat.suggestions')}:
+          {t('legalChat.suggestionsTitle', 'Suggested Questions')}
         </Typography>
         <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-          {t('legalChat.suggestions', { returnObjects: true }).map((suggestion, index) => (
+          {(t('legalChat.suggestions', { returnObjects: true }) || []).map((suggestion, index) => (
             <Button
               key={index}
               variant="outlined"

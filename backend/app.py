@@ -10,9 +10,10 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# Configure CORS for production
-allowed_origins = os.environ.get('ALLOWED_ORIGINS', 'https://smartprobono.netlify.app').split(',')
-CORS(app, resources={r"/*": {"origins": allowed_origins}})
+# Configure CORS for both development and production
+default_origins = ['http://localhost:3000', 'https://smartprobono.netlify.app']
+allowed_origins = os.environ.get('ALLOWED_ORIGINS', ','.join(default_origins)).split(',')
+CORS(app, resources={r"/*": {"origins": allowed_origins, "methods": ["GET", "POST", "OPTIONS"], "allow_headers": ["Content-Type"]}})
 
 # Register blueprints
 app.register_blueprint(legal_ai)
