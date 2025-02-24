@@ -36,9 +36,9 @@ function Navigation() {
 
   const navItems = [
     { name: 'Home', path: '/', icon: <HomeIcon /> },
-    { name: 'Contracts', path: '/contracts', icon: <DescriptionIcon /> },
-    { name: 'Rights', path: '/rights', icon: <GavelIcon /> },
-    { name: 'Immigration', path: '/immigration', icon: <FlightIcon /> },
+    { name: 'Contracts', path: '/services/contracts', icon: <DescriptionIcon /> },
+    { name: 'Rights', path: '/resources/rights', icon: <GavelIcon /> },
+    { name: 'Immigration', path: '/services/immigration', icon: <FlightIcon /> },
     { name: 'Services', path: '/services', icon: <BuildIcon /> },
     { name: 'Resources', path: '/resources', icon: <LibraryBooksIcon /> },
     { name: 'Contact', path: '/contact', icon: <ContactSupportIcon /> }

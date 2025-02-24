@@ -16,7 +16,13 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  CircularProgress,
+  Alert
 } from '@mui/material';
 import PageLayout from '../components/PageLayout';
 import SearchIcon from '@mui/icons-material/Search';
@@ -29,7 +35,9 @@ import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import DescriptionIcon from '@mui/icons-material/Description';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import DownloadIcon from '@mui/icons-material/Download';
+import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
+import { contractsApi } from '../services/api';
 
 const categories = [
   { value: 'ALL', label: 'All Templates' },
@@ -95,10 +103,65 @@ const templates = [
 function ContractsPage() {
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [formData, setFormData] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleCategoryChange = (event, newValue) => {
     setSelectedCategory(newValue);
+  };
+
+  const handleGenerateClick = (template) => {
+    setSelectedTemplate(template);
+    setFormData({});
+    setError(null);
+    setDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+    setSelectedTemplate(null);
+    setFormData({});
+    setError(null);
+  };
+
+  const handleInputChange = (field) => (event) => {
+    setFormData({
+      ...formData,
+      [field]: event.target.value
+    });
+  };
+
+  const handleGenerate = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Check required fields
+      const requiredFields = selectedTemplate.fields || [];
+      const missingFields = requiredFields.filter(field => !formData[field]);
+      
+      if (missingFields.length > 0) {
+        throw new Error(`Please fill in all required fields: ${missingFields.join(', ')}`);
+      }
+
+      // Generate the contract
+      await contractsApi.generate(
+        selectedTemplate.title,
+        formData,
+        'English' // Default to English for now
+      );
+
+      // Close dialog on success
+      handleCloseDialog();
+    } catch (err) {
+      setError(err.message || 'Failed to generate contract');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const filteredTemplates = templates.filter(template => {
@@ -200,6 +263,7 @@ function ContractsPage() {
                   variant="outlined" 
                   fullWidth
                   startIcon={<DownloadIcon />}
+                  onClick={() => handleGenerateClick(template)}
                   sx={{ 
                     borderColor: template.color, 
                     color: template.color,
@@ -216,6 +280,59 @@ function ContractsPage() {
           </Grid>
         ))}
       </Grid>
+
+      {/* Contract Generation Dialog */}
+      <Dialog
+        open={dialogOpen}
+        onClose={() => !loading && handleCloseDialog()}
+        maxWidth="sm"
+        fullWidth
+      >
+        {selectedTemplate && (
+          <>
+            <DialogTitle>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Typography variant="h6">Generate {selectedTemplate.title}</Typography>
+                <IconButton onClick={handleCloseDialog} size="small" disabled={loading}>
+                  <CloseIcon />
+                </IconButton>
+              </Box>
+            </DialogTitle>
+            <DialogContent dividers>
+              {error && (
+                <Alert severity="error" sx={{ mb: 2 }}>
+                  {error}
+                </Alert>
+              )}
+              {selectedTemplate.fields?.map((field) => (
+                <TextField
+                  key={field}
+                  fullWidth
+                  label={field}
+                  value={formData[field] || ''}
+                  onChange={handleInputChange(field)}
+                  margin="normal"
+                  required
+                  disabled={loading}
+                />
+              ))}
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDialog} disabled={loading}>
+                Cancel
+              </Button>
+              <Button
+                onClick={handleGenerate}
+                variant="contained"
+                disabled={loading}
+                startIcon={loading ? <CircularProgress size={20} /> : <DownloadIcon />}
+              >
+                {loading ? 'Generating...' : 'Generate Document'}
+              </Button>
+            </DialogActions>
+          </>
+        )}
+      </Dialog>
 
       {/* Help Section */}
       <Paper sx={{ p: 4, bgcolor: 'primary.main', color: 'white' }}>

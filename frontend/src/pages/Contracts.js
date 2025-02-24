@@ -16,7 +16,8 @@ import {
   DialogActions,
   TextField,
   Alert,
-  IconButton
+  IconButton,
+  CircularProgress
 } from '@mui/material';
 import DescriptionIcon from '@mui/icons-material/Description';
 import BusinessIcon from '@mui/icons-material/Business';
@@ -28,7 +29,7 @@ import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import DownloadIcon from '@mui/icons-material/Download';
 import CloseIcon from '@mui/icons-material/Close';
 import PageLayout from '../components/PageLayout';
-import { generateContract } from '../services/api';
+import { contractsApi } from '../services/api';
 
 const templates = {
   'Last Will and Testament': {
@@ -97,6 +98,8 @@ function Contracts() {
   const [formData, setFormData] = useState({});
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [showSuccess, setShowSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleCategoryChange = (event, newValue) => {
     setCategory(newValue);
@@ -105,11 +108,13 @@ function Contracts() {
   const handleTemplateSelect = (templateName) => {
     setSelectedTemplate(templateName);
     setFormData({});
+    setError(null);
   };
 
   const handleClose = () => {
     setSelectedTemplate(null);
     setFormData({});
+    setError(null);
   };
 
   const handleInputChange = (field) => (event) => {
@@ -120,14 +125,17 @@ function Contracts() {
   };
 
   const handleGenerate = async () => {
+    setLoading(true);
+    setError(null);
     try {
-      await generateContract(selectedTemplate, formData, selectedLanguage);
+      await contractsApi.generate(selectedTemplate, formData, selectedLanguage);
       setShowSuccess(true);
       handleClose();
     } catch (error) {
       console.error('Error generating document:', error);
-      // Show error message to user
-      alert('Failed to generate document. Please try again.');
+      setError(error.message || 'Failed to generate document. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -141,92 +149,63 @@ function Contracts() {
       description="Generate professional legal documents in multiple languages"
     >
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 4 }}>
-          <Tabs
-            value={category}
-            onChange={handleCategoryChange}
-            variant="scrollable"
-            scrollButtons="auto"
-            allowScrollButtonsMobile
-            sx={{
-              '& .MuiTab-root': {
-                minHeight: 48,
-                textTransform: 'none',
-                fontSize: '0.9rem'
-              }
-            }}
-          >
-            {categories.map((cat) => (
-              <Tab
-                key={cat.value}
-                value={cat.value}
-                label={
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    {cat.icon}
-                    <span>{cat.label}</span>
-                  </Box>
-                }
-              />
-            ))}
-          </Tabs>
-        </Box>
+        <Typography variant="h4" gutterBottom>
+          Legal Document Templates
+        </Typography>
+
+        <Tabs
+          value={category}
+          onChange={handleCategoryChange}
+          variant="scrollable"
+          scrollButtons="auto"
+          sx={{ mb: 4 }}
+        >
+          {categories.map((cat) => (
+            <Tab
+              key={cat.value}
+              value={cat.value}
+              label={cat.label}
+              icon={cat.icon}
+              iconPosition="start"
+            />
+          ))}
+        </Tabs>
 
         <Grid container spacing={3}>
           {filteredTemplates.map(([name, template]) => (
             <Grid item xs={12} sm={6} md={4} key={name}>
-              <Card 
-                sx={{ 
-                  height: '100%',
-                  borderRadius: 3,
-                  transition: 'transform 0.2s',
-                  '&:hover': {
-                    transform: 'translateY(-4px)',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-                  }
-                }}
-              >
-                <CardContent>
+              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                <CardContent sx={{ flexGrow: 1 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Box sx={{ 
-                      color: template.color,
-                      mr: 2 
-                    }}>
-                      {template.icon}
-                    </Box>
-                    <Typography variant="h6" component="h2">
+                    {template.icon}
+                    <Typography variant="h6" sx={{ ml: 1 }}>
                       {name}
                     </Typography>
                   </Box>
-                  <Typography color="text.secondary" sx={{ mb: 2 }}>
+                  <Typography variant="body2" color="text.secondary" paragraph>
                     {template.description}
                   </Typography>
-                  <Box sx={{ mb: 3 }}>
-                    {template.languages.map((lang) => (
-                      <Chip
-                        key={lang}
-                        label={lang}
-                        size="small"
-                        sx={{ mr: 1, mb: 1 }}
-                      />
-                    ))}
-                  </Box>
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    onClick={() => handleTemplateSelect(name)}
-                    startIcon={<DownloadIcon />}
-                    sx={{
-                      bgcolor: template.color,
-                      textTransform: 'none',
-                      borderRadius: 2,
-                      '&:hover': {
+                  <Box sx={{ mt: 'auto' }}>
+                    <Typography variant="caption" color="text.secondary" display="block">
+                      Available in: {template.languages.join(', ')}
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      onClick={() => handleTemplateSelect(name)}
+                      startIcon={<DownloadIcon />}
+                      sx={{
+                        mt: 2,
                         bgcolor: template.color,
-                        filter: 'brightness(0.9)'
-                      }
-                    }}
-                  >
-                    Generate
-                  </Button>
+                        '&:hover': {
+                          bgcolor: template.color,
+                          filter: 'brightness(0.9)'
+                        }
+                      }}
+                    >
+                      Generate
+                    </Button>
+                  </Box>
                 </CardContent>
               </Card>
             </Grid>
@@ -235,7 +214,7 @@ function Contracts() {
 
         <Dialog 
           open={!!selectedTemplate} 
-          onClose={handleClose}
+          onClose={() => !loading && handleClose()}
           maxWidth="sm"
           fullWidth
         >
@@ -244,12 +223,17 @@ function Contracts() {
               <DialogTitle>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <Typography variant="h6">Generate {selectedTemplate}</Typography>
-                  <IconButton onClick={handleClose} size="small">
+                  <IconButton onClick={handleClose} size="small" disabled={loading}>
                     <CloseIcon />
                   </IconButton>
                 </Box>
               </DialogTitle>
               <DialogContent dividers>
+                {error && (
+                  <Alert severity="error" sx={{ mb: 2 }}>
+                    {error}
+                  </Alert>
+                )}
                 <Grid container spacing={2}>
                   {templates[selectedTemplate].fields.map((field) => (
                     <Grid item xs={12} key={field}>
@@ -259,6 +243,8 @@ function Contracts() {
                         value={formData[field] || ''}
                         onChange={handleInputChange(field)}
                         variant="outlined"
+                        required
+                        disabled={loading}
                       />
                     </Grid>
                   ))}
@@ -272,9 +258,9 @@ function Contracts() {
                           <Chip
                             key={lang}
                             label={lang}
-                            onClick={() => setSelectedLanguage(lang)}
+                            onClick={() => !loading && setSelectedLanguage(lang)}
                             color={selectedLanguage === lang ? 'primary' : 'default'}
-                            sx={{ cursor: 'pointer' }}
+                            sx={{ cursor: loading ? 'not-allowed' : 'pointer' }}
                           />
                         ))}
                       </Box>
@@ -283,15 +269,15 @@ function Contracts() {
                 </Grid>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleClose} sx={{ textTransform: 'none' }}>
+                <Button onClick={handleClose} disabled={loading}>
                   Cancel
                 </Button>
                 <Button
                   variant="contained"
                   onClick={handleGenerate}
-                  startIcon={<DownloadIcon />}
+                  disabled={loading}
+                  startIcon={loading ? <CircularProgress size={20} /> : <DownloadIcon />}
                   sx={{ 
-                    textTransform: 'none',
                     bgcolor: templates[selectedTemplate].color,
                     '&:hover': {
                       bgcolor: templates[selectedTemplate].color,
@@ -299,7 +285,7 @@ function Contracts() {
                     }
                   }}
                 >
-                  Generate Document
+                  {loading ? 'Generating...' : 'Generate Document'}
                 </Button>
               </DialogActions>
             </>

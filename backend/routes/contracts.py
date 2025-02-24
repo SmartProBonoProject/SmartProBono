@@ -5,8 +5,23 @@ import os
 from datetime import datetime
 import tempfile
 import json
+from io import BytesIO
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter, A4
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from dotenv import load_dotenv
 
-contracts = Blueprint('contracts', __name__)
+load_dotenv()
+
+# Support Information
+SUPPORT_EMAIL = os.getenv('SUPPORT_EMAIL', 'support@smartprobono.org')
+SUPPORT_HOURS = '9:00 AM - 5:00 PM EST'
+SUPPORT_RESPONSE_TIME = '24-48 hours'
+
+contracts = Blueprint('contracts', __name__, url_prefix='/api/contracts')
 
 # Template definitions with placeholders and metadata
 TEMPLATES = {
@@ -359,84 +374,144 @@ def validate_form_data(template_name, form_data):
     
     return True, None
 
-@contracts.route('/api/contracts/generate', methods=['POST'])
+def create_styled_paragraph(text, style='Normal'):
+    styles = getSampleStyleSheet()
+    return Paragraph(text, styles[style])
+
+@contracts.route('/generate', methods=['POST'])
 def generate_contract():
     try:
-        data = request.json
+        data = request.get_json()
         template_name = data.get('template')
-        form_data = data.get('formData')
-        
+        form_data = data.get('data')
+        language = data.get('language', 'English')
+
         if not template_name or not form_data:
-            return jsonify({'error': 'Missing template name or form data'}), 400
+            return jsonify({'error': 'Missing required fields'}), 400
+
+        # Create a temporary file to store the PDF
+        with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp:
+            # Create the PDF document
+            doc = SimpleDocTemplate(
+                tmp.name,
+                pagesize=letter,
+                rightMargin=72,
+                leftMargin=72,
+                topMargin=72,
+                bottomMargin=72
+            )
+
+            # Define styles
+            styles = getSampleStyleSheet()
+            title_style = ParagraphStyle(
+                'CustomTitle',
+                parent=styles['Heading1'],
+                fontSize=24,
+                spaceAfter=30
+            )
+            heading_style = ParagraphStyle(
+                'CustomHeading',
+                parent=styles['Heading2'],
+                fontSize=14,
+                spaceAfter=12
+            )
+            normal_style = styles['Normal']
+
+            # Create the document content
+            elements = []
             
-        if template_name not in TEMPLATES:
-            return jsonify({'error': 'Template not found'}), 404
-        
-        # Validate form data
-        is_valid, error_message = validate_form_data(template_name, form_data)
-        if not is_valid:
-            return jsonify({'error': error_message}), 400
-            
-        # Add current date to form data
-        form_data['date'] = datetime.now().strftime('%B %d, %Y')
-        
-        # Generate document from template
-        template = Template(TEMPLATES[template_name]['template'])
-        document_content = template.render(**form_data)
-        
-        # Create temporary files for HTML and PDF
-        with tempfile.NamedTemporaryFile(suffix='.html', delete=False) as html_file:
-            html_content = f'''
-                <html>
-                <head>
-                    {PDF_STYLES}
-                </head>
-                <body>
-                    {document_content}
-                </body>
-                </html>
-            '''
-            html_file.write(html_content.encode())
-            html_path = html_file.name
-            
-        pdf_path = html_path.replace('.html', '.pdf')
-        
-        # Convert HTML to PDF with improved options
-        options = {
-            'page-size': 'Letter',
-            'margin-top': '0.75in',
-            'margin-right': '0.75in',
-            'margin-bottom': '0.75in',
-            'margin-left': '0.75in',
-            'encoding': 'UTF-8',
-            'no-outline': None,
-            'enable-local-file-access': None
-        }
-        
-        pdfkit.from_file(html_path, pdf_path, options=options)
-        
-        # Clean up HTML file
-        os.unlink(html_path)
-        
-        # Send PDF file
+            # Add title
+            elements.append(Paragraph(template_name.replace('_', ' ').title(), title_style))
+            elements.append(Spacer(1, 12))
+
+            # Add form data
+            for field, value in form_data.items():
+                elements.append(Paragraph(field + ':', heading_style))
+                elements.append(Paragraph(str(value), normal_style))
+                elements.append(Spacer(1, 12))
+
+            # Add footer
+            elements.append(Spacer(1, 20))
+            elements.append(Paragraph(f'Generated on {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}', styles['Normal']))
+            elements.append(Paragraph(f'Language: {language}', styles['Normal']))
+
+            # Build the PDF
+            doc.build(elements)
+
+            # Read the generated PDF
+            with open(tmp.name, 'rb') as pdf_file:
+                pdf_content = pdf_file.read()
+
+        # Clean up the temporary file
+        os.unlink(tmp.name)
+
+        # Send the PDF file
         return send_file(
-            pdf_path,
+            BytesIO(pdf_content),
             mimetype='application/pdf',
             as_attachment=True,
-            download_name=f"{template_name.lower().replace(' ', '_')}_{datetime.now().strftime('%Y%m%d')}.pdf"
+            download_name=f'{template_name.lower().replace("_", "-")}-{datetime.now().strftime("%Y%m%d")}.pdf'
         )
-        
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@contracts.route('/api/contracts/templates', methods=['GET'])
+@contracts.route('/templates', methods=['GET'])
 def get_templates():
-    """Get available templates with their metadata."""
-    templates_info = {}
-    for name, info in TEMPLATES.items():
-        templates_info[name] = {
-            'required_fields': info['required_fields'],
-            'optional_fields': info.get('optional_fields', []),
-            'validation_rules': info.get('validation_rules', {})
-        }
-    return jsonify({'templates': templates_info}) 
+    try:
+        templates = [
+            {
+                'id': 'employment',
+                'name': 'Employment Contract',
+                'description': 'Standard employment agreement template',
+                'fields': [
+                    {'name': 'title', 'type': 'text', 'required': True},
+                    {'name': 'employer', 'type': 'object', 'required': True, 'fields': [
+                        {'name': 'name', 'type': 'text', 'required': True},
+                        {'name': 'address', 'type': 'text', 'required': True}
+                    ]},
+                    {'name': 'employee', 'type': 'object', 'required': True, 'fields': [
+                        {'name': 'name', 'type': 'text', 'required': True},
+                        {'name': 'address', 'type': 'text', 'required': True}
+                    ]},
+                    {'name': 'startDate', 'type': 'date', 'required': True},
+                    {'name': 'compensation', 'type': 'object', 'required': True, 'fields': [
+                        {'name': 'salary', 'type': 'number', 'required': True},
+                        {'name': 'benefits', 'type': 'text', 'required': False}
+                    ]}
+                ]
+            },
+            {
+                'id': 'nda',
+                'name': 'Non-Disclosure Agreement',
+                'description': 'Confidentiality agreement template',
+                'fields': [
+                    {'name': 'title', 'type': 'text', 'required': True},
+                    {'name': 'partyA', 'type': 'text', 'required': True},
+                    {'name': 'partyB', 'type': 'text', 'required': True},
+                    {'name': 'effectiveDate', 'type': 'date', 'required': True},
+                    {'name': 'confidentialInformation', 'type': 'text', 'required': True},
+                    {'name': 'duration', 'type': 'text', 'required': True}
+                ]
+            },
+            {
+                'id': 'rental',
+                'name': 'Rental Agreement',
+                'description': 'Property rental/lease agreement',
+                'fields': [
+                    {'name': 'title', 'type': 'text', 'required': True},
+                    {'name': 'landlord', 'type': 'text', 'required': True},
+                    {'name': 'tenant', 'type': 'text', 'required': True},
+                    {'name': 'property', 'type': 'object', 'required': True, 'fields': [
+                        {'name': 'address', 'type': 'text', 'required': True},
+                        {'name': 'type', 'type': 'text', 'required': True}
+                    ]},
+                    {'name': 'rent', 'type': 'number', 'required': True},
+                    {'name': 'startDate', 'type': 'date', 'required': True},
+                    {'name': 'endDate', 'type': 'date', 'required': True}
+                ]
+            }
+        ]
+        return jsonify(templates)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500 

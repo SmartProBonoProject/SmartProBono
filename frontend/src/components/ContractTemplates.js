@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { 
   Grid, Card, CardContent, Typography, Button, 
   Dialog, TextField, Tab, Tabs, Box, IconButton,
-  InputAdornment
+  InputAdornment, CircularProgress, Alert
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import jsPDF from 'jspdf';
+import ContractForm from './ContractForm';
+import axios from 'axios';
+import config from '../config';
 
 const ContractTemplates = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -15,6 +17,8 @@ const ContractTemplates = () => {
   const [open, setOpen] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [formData, setFormData] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const categories = [
     "All",
@@ -43,13 +47,6 @@ const ContractTemplates = () => {
       languages: ['English']
     },
     {
-      title: "Affidavit",
-      category: "Legal",
-      description: "Sworn statement of fact",
-      fields: ['Affiant Name', 'Statement of Facts', 'Date'],
-      languages: ['English']
-    },
-    {
       title: "Rental Agreement",
       category: "Real Estate",
       description: "Property rental contract",
@@ -57,10 +54,17 @@ const ContractTemplates = () => {
       languages: ['English', 'Spanish', 'French']
     },
     {
-      title: "Deed of Sale",
-      category: "Real Estate",
-      description: "Legal document for the sale of property",
-      fields: ['Seller Name', 'Buyer Name', 'Property Description', 'Sale Price'],
+      title: "Employment Contract",
+      category: "Employment",
+      description: "Standard employment agreement template",
+      fields: ['Employer', 'Employee', 'Position', 'Salary', 'Start Date'],
+      languages: ['English', 'Spanish']
+    },
+    {
+      title: "Non-Disclosure Agreement",
+      category: "Business",
+      description: "Confidentiality agreement for business purposes",
+      fields: ['Party A', 'Party B', 'Confidential Information', 'Duration'],
       languages: ['English']
     },
     {
@@ -69,29 +73,7 @@ const ContractTemplates = () => {
       description: "Professional service contract template",
       fields: ['Provider Name', 'Client Name', 'Service Details', 'Payment Terms'],
       languages: ['English', 'Spanish', 'French']
-    },
-    {
-      title: "Employment Contract",
-      category: "Employment",
-      description: "Standard employment agreement",
-      fields: ['Employer', 'Employee', 'Position', 'Salary', 'Start Date'],
-      languages: ['English', 'Spanish', 'French']
-    },
-    {
-      title: "Software License Agreement",
-      category: "Technology",
-      description: "License agreement for software use",
-      fields: ['Licensor', 'Licensee', 'Software Description', 'License Fee'],
-      languages: ['English', 'Spanish']
-    },
-    {
-      title: "Healthcare Service Agreement",
-      category: "Healthcare",
-      description: "Agreement for healthcare services",
-      fields: ['Provider', 'Patient', 'Service Description', 'Payment Terms'],
-      languages: ['English']
     }
-    // Add more templates as needed...
   ];
 
   const handleSearch = (event) => {
@@ -108,17 +90,62 @@ const ContractTemplates = () => {
     return matchesSearch && matchesCategory;
   });
 
-  const handleGenerateDoc = (template) => {
+  const handleGenerateClick = (template) => {
     setSelectedTemplate(template);
     setOpen(true);
   };
 
-  const handleExportPDF = () => {
-    const doc = new jsPDF();
-    doc.text('Contract Document', 10, 10);
-    doc.text(`Provider: ${formData['Provider Name']}`, 10, 20);
-    // Add more fields as needed
-    doc.save('contract.pdf');
+  const handleExportPDF = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Validate required fields
+      const missingFields = selectedTemplate.fields.filter(field => !formData[field]);
+      if (missingFields.length > 0) {
+        throw new Error(`Please fill in all required fields: ${missingFields.join(', ')}`);
+      }
+
+      // Make API call to generate contract
+      const response = await fetch(`${config.apiUrl}/api/contracts/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          template: selectedTemplate.title.toLowerCase().replace(/\s+/g, '_'),
+          formData: formData
+        }),
+        // Important for receiving PDF data
+        responseType: 'blob'
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate contract');
+      }
+
+      // Create a blob from the PDF data
+      const blob = await response.blob();
+      
+      // Create a link to download the PDF
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `${selectedTemplate.title.toLowerCase().replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+      setOpen(false);
+      setFormData({});
+    } catch (err) {
+      setError(err.message || 'Error generating document');
+      console.error('Error generating document:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleFormChange = (e) => {
@@ -165,29 +192,35 @@ const ContractTemplates = () => {
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               <CardContent sx={{ flexGrow: 1 }}>
-                <Typography variant="h6" gutterBottom>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  {/* Icon will be added here */}
+                </Box>
+                <Typography variant="h6" sx={{ ml: 1 }}>
                   {template.title}
                 </Typography>
                 <Typography variant="body2" color="text.secondary" paragraph>
                   {template.description}
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  Available in: {template.languages.join(', ')}
-                </Typography>
-                <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
-                  <Button 
-                    variant="contained" 
-                    onClick={() => handleGenerateDoc(template)}
+                <Box sx={{ mt: 'auto' }}>
+                  <Typography variant="caption" color="text.secondary" display="block">
+                    Available in: {template.languages.join(', ')}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    onClick={() => handleGenerateClick(template)}
                     startIcon={<FileDownloadIcon />}
+                    sx={{
+                      mt: 2,
+                      bgcolor: template.color,
+                      '&:hover': {
+                        bgcolor: template.color,
+                        filter: 'brightness(0.9)'
+                      }
+                    }}
                   >
                     Generate
                   </Button>
-                  <IconButton 
-                    color="primary"
-                    onClick={handleExportPDF}
-                  >
-                    <PictureAsPdfIcon />
-                  </IconButton>
                 </Box>
               </CardContent>
             </Card>
@@ -195,39 +228,14 @@ const ContractTemplates = () => {
         ))}
       </Grid>
 
-      {/* Generation Dialog */}
-      <Dialog 
-        open={open} 
+      {/* Contract Form Dialog */}
+      <ContractForm
+        open={open}
         onClose={() => setOpen(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <Box sx={{ p: 3 }}>
-          <Typography variant="h6" gutterBottom>
-            Fill in the details for {selectedTemplate?.title}
-          </Typography>
-          <form>
-            {selectedTemplate?.fields.map((field, index) => (
-              <TextField
-                key={index}
-                label={field}
-                name={field}
-                fullWidth
-                required
-                margin="normal"
-                onChange={handleFormChange}
-              />
-            ))}
-            <Button 
-              variant="contained" 
-              onClick={handleExportPDF}
-              sx={{ mt: 2 }}
-            >
-              Export as PDF
-            </Button>
-          </form>
-        </Box>
-      </Dialog>
+        onGenerate={handleExportPDF}
+        template={selectedTemplate}
+        loading={loading}
+      />
     </Box>
   );
 };

@@ -28,19 +28,19 @@ function HomePage() {
       title: "Legal Documents",
       description: "Generate and review legal documents with AI assistance",
       icon: <DescriptionIcon sx={{ fontSize: 40, color: '#1976d2' }} />,
-      path: '/contracts'
+      path: '/services/contracts'
     },
     {
       title: "Know Your Rights",
       description: "Get instant information about your legal rights and protections",
       icon: <GavelIcon sx={{ fontSize: 40, color: '#1976d2' }} />,
-      path: '/rights'
+      path: '/resources/rights'
     },
     {
       title: "Immigration Help",
       description: "Support for visa applications and immigration processes",
       icon: <FlightIcon sx={{ fontSize: 40, color: '#1976d2' }} />,
-      path: '/immigration'
+      path: '/services/immigration'
     },
     {
       title: "Pro Bono Services",

@@ -14,6 +14,7 @@ import ProgressTracker from './components/ProgressTracker';
 import SubscriptionPlans from './components/SubscriptionPlans';
 import LegalAnalytics from './components/LegalAnalytics';
 import IdentityVerification from './components/IdentityVerification';
+import FeedbackAnalytics from './components/FeedbackAnalytics';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -63,7 +64,7 @@ const ResourcesLayout = () => (
   </div>
 );
 
-const LegalAILayout = () => (
+const LegalChatLayout = () => (
   <div>
     <Navigation />
     <Routes>
@@ -77,10 +78,10 @@ const LegalAILayout = () => (
         } 
       />
       <Route 
-        path="analytics" 
+        path="feedback" 
         element={
           <PremiumRouteGuard isPremium={false}>
-            <LegalAnalytics />
+            <FeedbackAnalytics />
           </PremiumRouteGuard>
         } 
       />
@@ -111,8 +112,8 @@ const App = () => {
                 <Route path="/resources/*" element={<ResourcesLayout />} />
                 <Route path="/contact" element={<Contact />} />
                 
-                {/* AI and Analytics routes */}
-                <Route path="/legal-ai/*" element={<LegalAILayout />} />
+                {/* Legal Chat route */}
+                <Route path="/legal-chat/*" element={<LegalChatLayout />} />
                 
                 {/* Identity Verification route */}
                 <Route 

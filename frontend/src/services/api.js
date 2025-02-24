@@ -24,15 +24,105 @@ export const legalRightsApi = {
 
 // Legal Chat API
 export const legalChatApi = {
-  sendMessage: async (message) => {
+  sendMessage: async (message, taskType = 'chat') => {
     try {
-      const response = await api.post('/api/legal/chat', { message });
-      return response.data;
+      const response = await fetch(`${config.apiUrl}/api/legal/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          message,
+          task_type: taskType,
+          include_model_info: true
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to send message');
+      }
+
+      return response.json();
     } catch (error) {
       console.error('Error sending message:', error);
       throw error;
     }
   },
+
+  // Add specialized endpoints for different tasks
+  generateDocument: async (prompt, documentType) => {
+    try {
+      const response = await fetch(`${config.apiUrl}/api/legal/draft`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          prompt,
+          document_type: documentType,
+          task_type: 'document_drafting'
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate document');
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Error generating document:', error);
+      throw error;
+    }
+  },
+
+  researchRights: async (query) => {
+    try {
+      const response = await fetch(`${config.apiUrl}/api/legal/research`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          query,
+          task_type: 'rights_research'
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to research rights');
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Error researching rights:', error);
+      throw error;
+    }
+  },
+
+  analyzeLegal: async (query) => {
+    try {
+      const response = await fetch(`${config.apiUrl}/api/legal/analyze`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          query,
+          task_type: 'complex_analysis'
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to analyze legal text');
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Error analyzing legal text:', error);
+      throw error;
+    }
+  }
 };
 
 // Documents API
@@ -163,6 +253,145 @@ export const expungementApi = {
       return response.data;
     } catch (error) {
       console.error('Error fetching required documents:', error);
+      throw error;
+    }
+  }
+};
+
+// Feedback API
+export const feedbackApi = {
+  submit: async (feedbackData) => {
+    try {
+      const response = await fetch(`${config.apiUrl}/api/feedback`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(feedbackData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit feedback');
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
+      throw error;
+    }
+  },
+
+  getAnalytics: async () => {
+    try {
+      const response = await fetch(`${config.apiUrl}/api/feedback/analytics`);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to fetch feedback analytics');
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Error fetching analytics:', error);
+      throw error;
+    }
+  },
+};
+
+// Conversation API
+export const conversationApi = {
+  save: async (conversationData) => {
+    try {
+      const response = await fetch(`${config.apiUrl}/api/conversations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(conversationData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save conversation');
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Error saving conversation:', error);
+      throw error;
+    }
+  },
+
+  getByUserId: async (userId) => {
+    try {
+      const response = await fetch(`${config.apiUrl}/api/conversations/${userId}`);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to fetch conversations');
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Error fetching conversations:', error);
+      throw error;
+    }
+  },
+};
+
+// Contracts API
+export const contractsApi = {
+  generate: async (templateName, formData, language) => {
+    try {
+      const response = await fetch(`${config.apiUrl}/api/contracts/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          template: templateName.toLowerCase().replace(/\s+/g, '_'),
+          data: formData,
+          language: language
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to generate contract');
+      }
+
+      // Get the blob from the response
+      const blob = await response.blob();
+      
+      // Create a download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${templateName.toLowerCase().replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`;
+      
+      // Trigger download
+      document.body.appendChild(link);
+      link.click();
+      
+      // Cleanup
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error generating contract:', error);
+      throw error;
+    }
+  },
+
+  getTemplates: async () => {
+    try {
+      const response = await fetch(`${config.apiUrl}/api/contracts/templates`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch templates');
+      }
+      return response.json();
+    } catch (error) {
+      console.error('Error fetching templates:', error);
       throw error;
     }
   }

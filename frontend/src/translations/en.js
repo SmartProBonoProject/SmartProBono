@@ -112,7 +112,9 @@ export const en = {
       delete: 'Delete',
       edit: 'Edit',
       view: 'View',
-      finish: 'Finish'
+      finish: 'Finish',
+      backToHome: 'Back to Home',
+      goBack: 'Go Back'
     },
     documents: {
       title: 'Legal Document Generator',
@@ -275,6 +277,35 @@ export const en = {
         document: 'Document Created',
         profile: 'Profile Completed',
         shared: 'First Share'
+      }
+    },
+    errors: {
+      notFound: {
+        title: 'Page Not Found',
+        message: 'The page you are looking for does not exist or has been moved.'
+      }
+    },
+    feedback: {
+      title: 'Share Your Feedback',
+      overallRating: 'Overall Rating',
+      accuracy: 'How accurate was the legal information provided?',
+      accuracyHigh: 'Very accurate',
+      accuracyMedium: 'Somewhat accurate',
+      accuracyLow: 'Not accurate',
+      helpfulness: 'How helpful was this interaction?',
+      helpfulnessVery: 'Very helpful',
+      helpfulnessSomewhat: 'Somewhat helpful',
+      helpfulnessNot: 'Not helpful',
+      clarity: 'How clear were the explanations?',
+      clarityHigh: 'Very clear',
+      clarityMedium: 'Moderately clear',
+      clarityLow: 'Not clear',
+      suggestions: 'Do you have any suggestions for improvement?',
+      submit: 'Submit Feedback',
+      submitted: 'Thank you for your feedback!',
+      userType: {
+        user: 'User',
+        lawyer: 'Legal Professional'
       }
     }
 };
