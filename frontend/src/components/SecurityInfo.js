@@ -23,23 +23,23 @@ const SecurityInfo = () => {
     {
       icon: <LockIcon />,
       title: t('security.features.encryption.title'),
-      description: t('security.features.encryption.description')
+      description: t('security.features.encryption.description'),
     },
     {
       icon: <SecurityIcon />,
       title: t('security.features.audits.title'),
-      description: t('security.features.audits.description')
+      description: t('security.features.audits.description'),
     },
     {
       icon: <VerifiedUserIcon />,
       title: t('security.features.dataProtection.title'),
-      description: t('security.features.dataProtection.description')
+      description: t('security.features.dataProtection.description'),
     },
     {
       icon: <GavelIcon />,
       title: t('security.features.compliance.title'),
-      description: t('security.features.compliance.description')
-    }
+      description: t('security.features.compliance.description'),
+    },
   ];
 
   return (
@@ -57,18 +57,16 @@ const SecurityInfo = () => {
           {securityFeatures.map((feature, index) => (
             <React.Fragment key={feature.title}>
               <ListItem alignItems="flex-start">
-                <ListItemIcon>
-                  {feature.icon}
-                </ListItemIcon>
+                <ListItemIcon>{feature.icon}</ListItemIcon>
                 <ListItemText
                   primary={feature.title}
                   secondary={feature.description}
                   primaryTypographyProps={{
                     variant: 'h6',
-                    gutterBottom: true
+                    gutterBottom: true,
                   }}
                   secondaryTypographyProps={{
-                    variant: 'body1'
+                    variant: 'body1',
                   }}
                 />
               </ListItem>
@@ -143,4 +141,4 @@ const SecurityInfo = () => {
   );
 };
 
-export default SecurityInfo; 
+export default SecurityInfo;

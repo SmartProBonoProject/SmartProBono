@@ -16,7 +16,7 @@ export const immigrationApi = {
   },
 
   // Create a new case
-  createCase: async (caseData) => {
+  createCase: async caseData => {
     try {
       const response = await fetch(`${config.apiUrl}/api/immigration/cases`, {
         method: 'POST',
@@ -56,7 +56,7 @@ export const immigrationApi = {
   },
 
   // Delete a case
-  deleteCase: async (caseId) => {
+  deleteCase: async caseId => {
     try {
       const response = await fetch(`${config.apiUrl}/api/immigration/cases/${caseId}`, {
         method: 'DELETE',
@@ -93,7 +93,7 @@ export const immigrationApi = {
   },
 
   // Get documents for a case
-  getDocuments: async (caseId) => {
+  getDocuments: async caseId => {
     try {
       const response = await fetch(`${config.apiUrl}/api/immigration/cases/${caseId}/documents`);
       if (!response.ok) {
@@ -119,24 +119,24 @@ export const immigrationApi = {
           formData,
         }),
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to generate form');
       }
 
       // Get the blob from the response
       const blob = await response.blob();
-      
+
       // Create a download link
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
       link.download = `${formType.toLowerCase().replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`;
-      
+
       // Trigger download
       document.body.appendChild(link);
       link.click();
-      
+
       // Cleanup
       link.remove();
       window.URL.revokeObjectURL(url);
@@ -144,5 +144,5 @@ export const immigrationApi = {
       console.error('Error generating form:', error);
       throw error;
     }
-  }
-}; 
+  },
+};

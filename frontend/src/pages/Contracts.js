@@ -17,7 +17,7 @@ import {
   TextField,
   Alert,
   IconButton,
-  CircularProgress
+  CircularProgress,
 } from '@mui/material';
 import DescriptionIcon from '@mui/icons-material/Description';
 import BusinessIcon from '@mui/icons-material/Business';
@@ -30,7 +30,6 @@ import DownloadIcon from '@mui/icons-material/Download';
 import CloseIcon from '@mui/icons-material/Close';
 import PageLayout from '../components/PageLayout';
 import { contractsApi } from '../services/api';
-
 const templates = {
   'Last Will and Testament': {
     icon: <DescriptionIcon fontSize="large" />,
@@ -38,7 +37,7 @@ const templates = {
     languages: ['English'],
     category: 'PERSONAL',
     color: '#1976d2',
-    fields: ['fullName', 'address', 'beneficiaries', 'executor']
+    fields: ['fullName', 'address', 'beneficiaries', 'executor'],
   },
   'Power of Attorney': {
     icon: <GavelIcon fontSize="large" />,
@@ -46,7 +45,7 @@ const templates = {
     languages: ['English'],
     category: 'LEGAL',
     color: '#2e7d32',
-    fields: ['grantor', 'attorney', 'powers', 'effectiveDate']
+    fields: ['grantor', 'attorney', 'powers', 'effectiveDate'],
   },
   'Rental Agreement': {
     icon: <HomeIcon fontSize="large" />,
@@ -54,7 +53,7 @@ const templates = {
     languages: ['English', 'Spanish', 'French'],
     category: 'REAL_ESTATE',
     color: '#ed6c02',
-    fields: ['landlord', 'tenant', 'property', 'rent', 'term']
+    fields: ['landlord', 'tenant', 'property', 'rent', 'term'],
   },
   'Employment Contract': {
     icon: <WorkIcon fontSize="large" />,
@@ -62,7 +61,7 @@ const templates = {
     languages: ['English', 'Spanish'],
     category: 'EMPLOYMENT',
     color: '#9c27b0',
-    fields: ['employer', 'employee', 'position', 'salary', 'startDate']
+    fields: ['employer', 'employee', 'position', 'salary', 'startDate'],
   },
   'Non-Disclosure Agreement': {
     icon: <BusinessIcon fontSize="large" />,
@@ -70,7 +69,7 @@ const templates = {
     languages: ['English'],
     category: 'BUSINESS',
     color: '#0288d1',
-    fields: ['disclosingParty', 'receivingParty', 'purpose', 'duration']
+    fields: ['disclosingParty', 'receivingParty', 'purpose', 'duration'],
   },
   'Service Agreement': {
     icon: <DescriptionIcon fontSize="large" />,
@@ -78,10 +77,9 @@ const templates = {
     languages: ['English', 'Spanish', 'French'],
     category: 'BUSINESS',
     color: '#7b1fa2',
-    fields: ['serviceProvider', 'client', 'services', 'compensation']
-  }
+    fields: ['serviceProvider', 'client', 'services', 'compensation'],
+  },
 };
-
 const categories = [
   { value: 'ALL', label: 'ALL TEMPLATES', icon: <DescriptionIcon /> },
   { value: 'BUSINESS', label: 'BUSINESS', icon: <BusinessIcon /> },
@@ -89,9 +87,8 @@ const categories = [
   { value: 'REAL_ESTATE', label: 'REAL ESTATE', icon: <HomeIcon /> },
   { value: 'PERSONAL', label: 'PERSONAL', icon: <PersonIcon /> },
   { value: 'LEGAL', label: 'LEGAL', icon: <GavelIcon /> },
-  { value: 'HEALTHCARE', label: 'HEALTHCARE', icon: <LocalHospitalIcon /> }
+  { value: 'HEALTHCARE', label: 'HEALTHCARE', icon: <LocalHospitalIcon /> },
 ];
-
 function Contracts() {
   const [category, setCategory] = useState('ALL');
   const [selectedTemplate, setSelectedTemplate] = useState(null);
@@ -100,30 +97,25 @@ function Contracts() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
   const handleCategoryChange = (event, newValue) => {
     setCategory(newValue);
   };
-
-  const handleTemplateSelect = (templateName) => {
+  const handleTemplateSelect = templateName => {
     setSelectedTemplate(templateName);
     setFormData({});
     setError(null);
   };
-
   const handleClose = () => {
     setSelectedTemplate(null);
     setFormData({});
     setError(null);
   };
-
-  const handleInputChange = (field) => (event) => {
+  const handleInputChange = field => event => {
     setFormData({
       ...formData,
-      [field]: event.target.value
+      [field]: event.target.value,
     });
   };
-
   const handleGenerate = async () => {
     setLoading(true);
     setError(null);
@@ -138,11 +130,9 @@ function Contracts() {
       setLoading(false);
     }
   };
-
-  const filteredTemplates = Object.entries(templates).filter(([_, template]) => 
-    category === 'ALL' || template.category === category
+  const filteredTemplates = Object.entries(templates).filter(
+    ([_, template]) => category === 'ALL' || template.category === category
   );
-
   return (
     <PageLayout
       title="Legal Contract Templates"
@@ -152,7 +142,6 @@ function Contracts() {
         <Typography variant="h4" gutterBottom>
           Legal Document Templates
         </Typography>
-
         <Tabs
           value={category}
           onChange={handleCategoryChange}
@@ -160,7 +149,7 @@ function Contracts() {
           scrollButtons="auto"
           sx={{ mb: 4 }}
         >
-          {categories.map((cat) => (
+          {categories.map(cat => (
             <Tab
               key={cat.value}
               value={cat.value}
@@ -170,7 +159,6 @@ function Contracts() {
             />
           ))}
         </Tabs>
-
         <Grid container spacing={3}>
           {filteredTemplates.map(([name, template]) => (
             <Grid item xs={12} sm={6} md={4} key={name}>
@@ -199,8 +187,8 @@ function Contracts() {
                         bgcolor: template.color,
                         '&:hover': {
                           bgcolor: template.color,
-                          filter: 'brightness(0.9)'
-                        }
+                          filter: 'brightness(0.9)',
+                        },
                       }}
                     >
                       Generate
@@ -211,9 +199,8 @@ function Contracts() {
             </Grid>
           ))}
         </Grid>
-
-        <Dialog 
-          open={!!selectedTemplate} 
+        <Dialog
+          open={!!selectedTemplate}
           onClose={() => !loading && handleClose()}
           maxWidth="sm"
           fullWidth
@@ -221,7 +208,9 @@ function Contracts() {
           {selectedTemplate && (
             <>
               <DialogTitle>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Box
+                  sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+                >
                   <Typography variant="h6">Generate {selectedTemplate}</Typography>
                   <IconButton onClick={handleClose} size="small" disabled={loading}>
                     <CloseIcon />
@@ -235,11 +224,13 @@ function Contracts() {
                   </Alert>
                 )}
                 <Grid container spacing={2}>
-                  {templates[selectedTemplate].fields.map((field) => (
+                  {templates[selectedTemplate].fields.map(field => (
                     <Grid item xs={12} key={field}>
                       <TextField
                         fullWidth
-                        label={field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1')}
+                        label={
+                          field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1')
+                        }
                         value={formData[field] || ''}
                         onChange={handleInputChange(field)}
                         variant="outlined"
@@ -254,7 +245,7 @@ function Contracts() {
                         Select Language
                       </Typography>
                       <Box sx={{ display: 'flex', gap: 1 }}>
-                        {templates[selectedTemplate].languages.map((lang) => (
+                        {templates[selectedTemplate].languages.map(lang => (
                           <Chip
                             key={lang}
                             label={lang}
@@ -277,12 +268,12 @@ function Contracts() {
                   onClick={handleGenerate}
                   disabled={loading}
                   startIcon={loading ? <CircularProgress size={20} /> : <DownloadIcon />}
-                  sx={{ 
+                  sx={{
                     bgcolor: templates[selectedTemplate].color,
                     '&:hover': {
                       bgcolor: templates[selectedTemplate].color,
-                      filter: 'brightness(0.9)'
-                    }
+                      filter: 'brightness(0.9)',
+                    },
                   }}
                 >
                   {loading ? 'Generating...' : 'Generate Document'}
@@ -291,18 +282,9 @@ function Contracts() {
             </>
           )}
         </Dialog>
-
-        <Dialog
-          open={showSuccess}
-          onClose={() => setShowSuccess(false)}
-          maxWidth="xs"
-          fullWidth
-        >
+        <Dialog open={showSuccess} onClose={() => setShowSuccess(false)} maxWidth="xs" fullWidth>
           <DialogContent>
-            <Alert 
-              severity="success"
-              onClose={() => setShowSuccess(false)}
-            >
+            <Alert severity="success" onClose={() => setShowSuccess(false)}>
               Document generated successfully! Check your downloads folder.
             </Alert>
           </DialogContent>
@@ -311,5 +293,4 @@ function Contracts() {
     </PageLayout>
   );
 }
-
-export default Contracts; 
+export default Contracts;

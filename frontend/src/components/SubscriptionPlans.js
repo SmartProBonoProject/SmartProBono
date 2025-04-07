@@ -22,10 +22,9 @@ import {
   Person as PersonIcon,
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-
+import PropTypes from 'prop-types';
 const SubscriptionPlans = ({ onSubscribe, currentPlan = 'free' }) => {
   const { t } = useTranslation();
-
   const plans = [
     {
       id: 'free',
@@ -39,7 +38,7 @@ const SubscriptionPlans = ({ onSubscribe, currentPlan = 'free' }) => {
         t('subscription.plans.free.features.resources'),
       ],
       buttonText: t('subscription.current'),
-      recommended: false
+      recommended: false,
     },
     {
       id: 'pro',
@@ -55,7 +54,7 @@ const SubscriptionPlans = ({ onSubscribe, currentPlan = 'free' }) => {
         t('subscription.plans.pro.features.customization'),
       ],
       buttonText: currentPlan === 'pro' ? t('subscription.current') : t('subscription.upgrade'),
-      recommended: true
+      recommended: true,
     },
     {
       id: 'team',
@@ -70,15 +69,13 @@ const SubscriptionPlans = ({ onSubscribe, currentPlan = 'free' }) => {
         t('subscription.plans.team.features.support'),
       ],
       buttonText: t('subscription.contact'),
-      recommended: false
-    }
+      recommended: false,
+    },
   ];
-
-  const handleSubscribe = (planId) => {
+  const handleSubscribe = planId => {
     if (planId === currentPlan) return;
     onSubscribe(planId);
   };
-
   return (
     <Box sx={{ py: 4 }}>
       <Typography variant="h4" align="center" gutterBottom>
@@ -87,19 +84,18 @@ const SubscriptionPlans = ({ onSubscribe, currentPlan = 'free' }) => {
       <Typography variant="subtitle1" align="center" color="text.secondary" sx={{ mb: 6 }}>
         {t('subscription.subtitle')}
       </Typography>
-
       <Grid container spacing={4} justifyContent="center">
-        {plans.map((plan) => (
+        {plans.map(plan => (
           <Grid item xs={12} sm={6} md={4} key={plan.id}>
-            <Card 
+            <Card
               elevation={plan.recommended ? 8 : 1}
-              sx={{ 
+              sx={{
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 position: 'relative',
                 border: plan.recommended ? 2 : 0,
-                borderColor: 'primary.main'
+                borderColor: 'primary.main',
               }}
             >
               {plan.recommended && (
@@ -113,7 +109,6 @@ const SubscriptionPlans = ({ onSubscribe, currentPlan = 'free' }) => {
                   }}
                 />
               )}
-              
               <CardContent sx={{ flexGrow: 1 }}>
                 <Box sx={{ textAlign: 'center', mb: 2 }}>
                   {plan.icon}
@@ -123,7 +118,14 @@ const SubscriptionPlans = ({ onSubscribe, currentPlan = 'free' }) => {
                   <Typography variant="subtitle1" color="text.secondary" paragraph>
                     {plan.description}
                   </Typography>
-                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'baseline', mb: 2 }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'baseline',
+                      mb: 2,
+                    }}
+                  >
                     <Typography variant="h4" component="span">
                       {plan.price}
                     </Typography>
@@ -134,9 +136,7 @@ const SubscriptionPlans = ({ onSubscribe, currentPlan = 'free' }) => {
                     )}
                   </Box>
                 </Box>
-
                 <Divider sx={{ my: 2 }} />
-
                 <List dense>
                   {plan.features.map((feature, index) => (
                     <ListItem key={index}>
@@ -148,7 +148,6 @@ const SubscriptionPlans = ({ onSubscribe, currentPlan = 'free' }) => {
                   ))}
                 </List>
               </CardContent>
-
               <CardActions sx={{ p: 2, pt: 0 }}>
                 <Button
                   fullWidth
@@ -163,7 +162,6 @@ const SubscriptionPlans = ({ onSubscribe, currentPlan = 'free' }) => {
           </Grid>
         ))}
       </Grid>
-
       <Box sx={{ mt: 6, textAlign: 'center' }}>
         <Typography variant="body2" color="text.secondary">
           {t('subscription.nonprofit')}
@@ -176,4 +174,12 @@ const SubscriptionPlans = ({ onSubscribe, currentPlan = 'free' }) => {
   );
 };
 
-export default SubscriptionPlans; 
+// Define PropTypes
+SubscriptionPlans.propTypes = {
+  /** TODO: Add description */
+  onSubscribe: PropTypes.any,
+  /** TODO: Add description */
+  currentPlan: PropTypes.any,
+};
+
+export default SubscriptionPlans;

@@ -23,20 +23,18 @@ import {
   Timeline as TimelineIcon,
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-
+import PropTypes from 'prop-types';
 const LegalAnalytics = ({ caseData, onRecommendation }) => {
   const { t } = useTranslation();
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [selectedFactor, setSelectedFactor] = useState(null);
-
   useEffect(() => {
     if (caseData) {
       analyzeCaseData();
     }
-  }, [caseData]);
-
+  }, [caseData, analyzeCaseData]);
   const analyzeCaseData = async () => {
     setLoading(true);
     try {
@@ -47,7 +45,6 @@ const LegalAnalytics = ({ caseData, onRecommendation }) => {
         },
         body: JSON.stringify(caseData),
       });
-      
       const data = await response.json();
       setAnalysis(data);
     } catch (error) {
@@ -56,16 +53,13 @@ const LegalAnalytics = ({ caseData, onRecommendation }) => {
       setLoading(false);
     }
   };
-
-  const getSuccessRateColor = (rate) => {
+  const getSuccessRateColor = rate => {
     if (rate >= 75) return 'success';
     if (rate >= 50) return 'warning';
     return 'error';
   };
-
   const renderSuccessFactors = () => {
     if (!analysis?.factors) return null;
-
     return analysis.factors.map((factor, index) => (
       <Grid item xs={12} md={6} key={index}>
         <Card>
@@ -103,7 +97,6 @@ const LegalAnalytics = ({ caseData, onRecommendation }) => {
       </Grid>
     ));
   };
-
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
@@ -111,7 +104,6 @@ const LegalAnalytics = ({ caseData, onRecommendation }) => {
       </Box>
     );
   }
-
   return (
     <Box sx={{ mb: 4 }}>
       <Paper elevation={3} sx={{ p: 3 }}>
@@ -138,14 +130,12 @@ const LegalAnalytics = ({ caseData, onRecommendation }) => {
                 </Alert>
               )}
             </Box>
-
             <Typography variant="h5" gutterBottom>
               {t('analytics.keyFactors')}
             </Typography>
             <Grid container spacing={3}>
               {renderSuccessFactors()}
             </Grid>
-
             {analysis.similarCases && (
               <Box sx={{ mt: 4 }}>
                 <Typography variant="h5" gutterBottom>
@@ -156,9 +146,7 @@ const LegalAnalytics = ({ caseData, onRecommendation }) => {
                     <Grid item xs={12} key={index}>
                       <Card variant="outlined">
                         <CardContent>
-                          <Typography variant="subtitle1">
-                            {caseRef.title}
-                          </Typography>
+                          <Typography variant="subtitle1">{caseRef.title}</Typography>
                           <Typography variant="body2" color="text.secondary">
                             {caseRef.outcome}
                           </Typography>
@@ -171,15 +159,10 @@ const LegalAnalytics = ({ caseData, onRecommendation }) => {
             )}
           </>
         )}
-
         <Dialog open={showDetails} onClose={() => setShowDetails(false)}>
-          <DialogTitle>
-            {selectedFactor?.name}
-          </DialogTitle>
+          <DialogTitle>{selectedFactor?.name}</DialogTitle>
           <DialogContent>
-            <Typography paragraph>
-              {selectedFactor?.description}
-            </Typography>
+            <Typography paragraph>{selectedFactor?.description}</Typography>
             {selectedFactor?.recommendations?.map((rec, index) => (
               <Alert severity="info" sx={{ mt: 1 }} key={index}>
                 {rec}
@@ -187,9 +170,7 @@ const LegalAnalytics = ({ caseData, onRecommendation }) => {
             ))}
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setShowDetails(false)}>
-              {t('common.close')}
-            </Button>
+            <Button onClick={() => setShowDetails(false)}>{t('common.close')}</Button>
           </DialogActions>
         </Dialog>
       </Paper>
@@ -197,4 +178,12 @@ const LegalAnalytics = ({ caseData, onRecommendation }) => {
   );
 };
 
-export default LegalAnalytics; 
+// Define PropTypes
+LegalAnalytics.propTypes = {
+  /** TODO: Add description */
+  caseData: PropTypes.any,
+  /** TODO: Add description */
+  onRecommendation: PropTypes.any,
+};
+
+export default LegalAnalytics;

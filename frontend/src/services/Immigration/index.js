@@ -1,11 +1,11 @@
 // Immigration Service Module
 export const ImmigrationService = {
   visaGuides: {
-    getApplicationSteps: async (visaType) => {
+    getApplicationSteps: async visaType => {
       // Implementation
     },
-    generateDocuments: async (userData) => {
+    generateDocuments: async userData => {
       // Use existing DocumentGenerator
-    }
-  }
-}; 
+    },
+  },
+};

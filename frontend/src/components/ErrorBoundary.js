@@ -1,40 +1,36 @@
 import React from 'react';
 import { Box, Alert, Button, Typography } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import PropTypes from 'prop-types';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       hasError: false,
       error: null,
       errorInfo: null,
-      modelType: null
+      modelType: null,
     };
   }
-
   static getDerivedStateFromError(error) {
     return { hasError: true };
   }
-
   componentDidCatch(error, errorInfo) {
     // Detect which model caused the error
     const modelType = this.detectModelType(error);
-    
     this.setState({
       error,
       errorInfo,
-      modelType
+      modelType,
     });
-
     // Log the error
     console.error('AI Model Error:', {
       model: modelType,
       error: error,
-      info: errorInfo
+      info: errorInfo,
     });
   }
-
   detectModelType(error) {
     const errorMessage = error.message.toLowerCase();
     if (errorMessage.includes('tinyllama') || errorMessage.includes('chat')) {
@@ -51,49 +47,47 @@ class ErrorBoundary extends React.Component {
     }
     return 'unknown';
   }
-
   getErrorMessage() {
     switch (this.state.modelType) {
       case 'chat':
         return {
           title: 'Chat Assistant Error',
           message: 'Our chat assistant is having trouble responding. Try rephrasing your question.',
-          action: 'Try Again'
+          action: 'Try Again',
         };
       case 'document':
         return {
           title: 'Document Generation Error',
-          message: 'There was an issue generating your document. Please check your inputs and try again.',
-          action: 'Retry Generation'
+          message:
+            'There was an issue generating your document. Please check your inputs and try again.',
+          action: 'Retry Generation',
         };
       case 'research':
         return {
           title: 'Legal Research Error',
           message: 'We encountered an issue while researching. Try narrowing your search criteria.',
-          action: 'Retry Research'
+          action: 'Retry Research',
         };
       case 'analysis':
         return {
           title: 'Legal Analysis Error',
           message: 'Complex analysis failed. Try breaking down your request into smaller parts.',
-          action: 'Retry Analysis'
+          action: 'Retry Analysis',
         };
       default:
         return {
           title: 'Error',
           message: 'Something went wrong. Please try again.',
-          action: 'Retry'
+          action: 'Retry',
         };
     }
   }
-
   render() {
     if (this.state.hasError) {
       const errorInfo = this.getErrorMessage();
-      
       return (
         <Box sx={{ p: 3 }}>
-          <Alert 
+          <Alert
             severity="error"
             action={
               <Button
@@ -112,16 +106,19 @@ class ErrorBoundary extends React.Component {
             <Typography variant="h6" component="div" gutterBottom>
               {errorInfo.title}
             </Typography>
-            <Typography variant="body2">
-              {errorInfo.message}
-            </Typography>
+            <Typography variant="body2">{errorInfo.message}</Typography>
           </Alert>
         </Box>
       );
     }
-
     return this.props.children;
   }
 }
 
-export default ErrorBoundary; 
+// Define PropTypes
+ErrorBoundary.propTypes = {
+  /** React children to be rendered within the error boundary */
+  children: PropTypes.node.isRequired
+};
+
+export default ErrorBoundary;

@@ -4,23 +4,25 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 const ContractGuide = () => {
   const guides = [
     {
-      title: "Understanding Contracts",
-      content: "A contract is a legally binding agreement between two or more parties. It defines the rights and obligations of each party.",
+      title: 'Understanding Contracts',
+      content:
+        'A contract is a legally binding agreement between two or more parties. It defines the rights and obligations of each party.',
       tips: [
-        "Always read the entire contract",
-        "Understand all terms before signing",
-        "Keep copies of all signed documents"
-      ]
+        'Always read the entire contract',
+        'Understand all terms before signing',
+        'Keep copies of all signed documents',
+      ],
     },
     {
-      title: "Contract Elements",
-      content: "Every valid contract must have certain essential elements to be legally enforceable.",
+      title: 'Contract Elements',
+      content:
+        'Every valid contract must have certain essential elements to be legally enforceable.',
       tips: [
-        "Ensure clear offer and acceptance",
-        "Verify consideration exists",
-        "Check legal capacity of parties"
-      ]
-    }
+        'Ensure clear offer and acceptance',
+        'Verify consideration exists',
+        'Check legal capacity of parties',
+      ],
+    },
   ];
 
   return (

@@ -11,7 +11,7 @@ const api = axios.create({
 
 // Legal Rights API
 export const legalRightsApi = {
-  getRights: async (category) => {
+  getRights: async category => {
     try {
       const response = await api.get(`/api/legal/rights/${category}`);
       return response.data;
@@ -31,10 +31,10 @@ export const legalChatApi = {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           message,
           task_type: taskType,
-          include_model_info: true
+          include_model_info: true,
         }),
       });
 
@@ -43,7 +43,20 @@ export const legalChatApi = {
         throw new Error(errorData.error || 'Failed to send message');
       }
 
-      return response.json();
+      const data = await response.json();
+      return {
+        response: data.response,
+        model: data.model,
+        provider: data.provider,
+        tokens: data.tokens,
+        confidenceScore: data.confidence_score,
+        confidenceFactors: data.confidence_factors,
+        reasoningDetails: data.reasoning_details,
+        citations: data.citations || [],
+        jurisdictions: data.jurisdictions || [],
+        lastUpdated: data.last_updated,
+        status: data.status,
+      };
     } catch (error) {
       console.error('Error sending message:', error);
       throw error;
@@ -58,10 +71,10 @@ export const legalChatApi = {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           prompt,
           document_type: documentType,
-          task_type: 'document_drafting'
+          task_type: 'document_drafting',
         }),
       });
 
@@ -69,23 +82,31 @@ export const legalChatApi = {
         throw new Error('Failed to generate document');
       }
 
-      return response.json();
+      const data = await response.json();
+      return {
+        document: data.document,
+        model: data.model,
+        confidenceScore: data.confidence_score,
+        citations: data.citations || [],
+        status: data.status,
+      };
     } catch (error) {
       console.error('Error generating document:', error);
       throw error;
     }
   },
 
-  researchRights: async (query) => {
+  researchRights: async (query, jurisdiction = null) => {
     try {
-      const response = await fetch(`${config.apiUrl}/api/legal/research`, {
+      const response = await fetch(`${config.apiUrl}/api/legal/rights`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          query,
-          task_type: 'rights_research'
+        body: JSON.stringify({
+          topic: query,
+          jurisdiction: jurisdiction,
+          task_type: 'rights_research',
         }),
       });
 
@@ -93,23 +114,32 @@ export const legalChatApi = {
         throw new Error('Failed to research rights');
       }
 
-      return response.json();
+      const data = await response.json();
+      return {
+        explanation: data.explanation,
+        model: data.model,
+        confidenceScore: data.confidence_score,
+        citations: data.citations || [],
+        jurisdictions: data.jurisdictions || [],
+        reasoningDetails: data.reasoning_details,
+        status: data.status,
+      };
     } catch (error) {
       console.error('Error researching rights:', error);
       throw error;
     }
   },
 
-  analyzeLegal: async (query) => {
+  analyzeLegal: async (query, analysisType = 'legal_research') => {
     try {
       const response = await fetch(`${config.apiUrl}/api/legal/analyze`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          query,
-          task_type: 'complex_analysis'
+        body: JSON.stringify({
+          document: query,
+          analysis_type: analysisType,
         }),
       });
 
@@ -117,12 +147,54 @@ export const legalChatApi = {
         throw new Error('Failed to analyze legal text');
       }
 
-      return response.json();
+      const data = await response.json();
+      return {
+        analysis: data.analysis,
+        model: data.model,
+        confidenceScore: data.confidence_score,
+        citations: data.citations || [],
+        jurisdictions: data.jurisdictions || [],
+        reasoningDetails: data.reasoning_details,
+        status: data.status,
+      };
     } catch (error) {
       console.error('Error analyzing legal text:', error);
       throw error;
     }
-  }
+  },
+
+  explainProcedure: async (procedureType, jurisdiction = null) => {
+    try {
+      const response = await fetch(`${config.apiUrl}/api/legal/procedure`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          procedure_type: procedureType,
+          jurisdiction: jurisdiction,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to explain procedure');
+      }
+
+      const data = await response.json();
+      return {
+        guidance: data.guidance,
+        model: data.model,
+        confidenceScore: data.confidence_score,
+        citations: data.citations || [],
+        jurisdictions: data.jurisdictions || [],
+        reasoningDetails: data.reasoning_details,
+        status: data.status,
+      };
+    } catch (error) {
+      console.error('Error explaining procedure:', error);
+      throw error;
+    }
+  },
 };
 
 // Documents API
@@ -139,7 +211,7 @@ export const documentsApi = {
       throw error;
     }
   },
-  
+
   getTemplates: async () => {
     try {
       const response = await api.get('/api/documents/templates');
@@ -151,7 +223,7 @@ export const documentsApi = {
   },
 
   // New document endpoints
-  saveDocument: async (documentData) => {
+  saveDocument: async documentData => {
     try {
       const response = await api.post('/api/documents/save', documentData);
       return response.data;
@@ -179,12 +251,12 @@ export const documentsApi = {
       console.error('Error submitting to e-filing:', error);
       throw error;
     }
-  }
+  },
 };
 
 // Immigration Services API
 export const immigrationApi = {
-  getVisaRequirements: async (visaType) => {
+  getVisaRequirements: async visaType => {
     try {
       const response = await api.get(`/api/immigration/visa-requirements/${visaType}`);
       return response.data;
@@ -193,8 +265,8 @@ export const immigrationApi = {
       throw error;
     }
   },
-  
-  submitVisaApplication: async (applicationData) => {
+
+  submitVisaApplication: async applicationData => {
     try {
       const response = await api.post('/api/immigration/apply', applicationData);
       return response.data;
@@ -207,7 +279,7 @@ export const immigrationApi = {
 
 // Expungement Services API
 export const expungementApi = {
-  checkEligibility: async (caseData) => {
+  checkEligibility: async caseData => {
     try {
       const response = await api.post('/api/expungement/check-eligibility', caseData);
       return response.data;
@@ -217,7 +289,7 @@ export const expungementApi = {
     }
   },
 
-  getStateRules: async (state) => {
+  getStateRules: async state => {
     try {
       const response = await api.get(`/api/expungement/rules/${state}`);
       return response.data;
@@ -227,7 +299,7 @@ export const expungementApi = {
     }
   },
 
-  startExpungementProcess: async (caseData) => {
+  startExpungementProcess: async caseData => {
     try {
       const response = await api.post('/api/expungement/start', caseData);
       return response.data;
@@ -255,12 +327,12 @@ export const expungementApi = {
       console.error('Error fetching required documents:', error);
       throw error;
     }
-  }
+  },
 };
 
 // Feedback API
 export const feedbackApi = {
-  submit: async (feedbackData) => {
+  submit: async feedbackData => {
     try {
       const response = await fetch(`${config.apiUrl}/api/feedback`, {
         method: 'POST',
@@ -285,7 +357,7 @@ export const feedbackApi = {
   getAnalytics: async () => {
     try {
       const response = await fetch(`${config.apiUrl}/api/feedback/analytics`);
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Failed to fetch feedback analytics');
@@ -301,7 +373,7 @@ export const feedbackApi = {
 
 // Conversation API
 export const conversationApi = {
-  save: async (conversationData) => {
+  save: async conversationData => {
     try {
       const response = await fetch(`${config.apiUrl}/api/conversations`, {
         method: 'POST',
@@ -323,10 +395,10 @@ export const conversationApi = {
     }
   },
 
-  getByUserId: async (userId) => {
+  getByUserId: async userId => {
     try {
       const response = await fetch(`${config.apiUrl}/api/conversations/${userId}`);
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Failed to fetch conversations');
@@ -352,8 +424,8 @@ export const contractsApi = {
         body: JSON.stringify({
           template: templateName.toLowerCase().replace(/\s+/g, '_'),
           data: formData,
-          language: language
-        })
+          language: language,
+        }),
       });
 
       if (!response.ok) {
@@ -363,17 +435,17 @@ export const contractsApi = {
 
       // Get the blob from the response
       const blob = await response.blob();
-      
+
       // Create a download link
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
       link.download = `${templateName.toLowerCase().replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`;
-      
+
       // Trigger download
       document.body.appendChild(link);
       link.click();
-      
+
       // Cleanup
       link.remove();
       window.URL.revokeObjectURL(url);
@@ -394,13 +466,13 @@ export const contractsApi = {
       console.error('Error fetching templates:', error);
       throw error;
     }
-  }
+  },
 };
 
 // Error interceptor
 api.interceptors.response.use(
-  (response) => response,
-  (error) => {
+  response => response,
+  error => {
     if (error.response) {
       // Handle specific error status codes
       switch (error.response.status) {
@@ -428,4 +500,4 @@ api.interceptors.response.use(
   }
 );
 
-export default api; 
+export default api;

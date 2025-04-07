@@ -16,6 +16,7 @@ import {
   Chip,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 
 const FeedbackForm = ({ onSubmit, userType = 'user' }) => {
   const { t } = useTranslation();
@@ -29,7 +30,7 @@ const FeedbackForm = ({ onSubmit, userType = 'user' }) => {
   });
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     try {
       await onSubmit(feedback);
@@ -55,10 +56,10 @@ const FeedbackForm = ({ onSubmit, userType = 'user' }) => {
           {t('feedback.title')}
         </Typography>
 
-        <Chip 
-          label={userType === 'lawyer' ? 'Legal Professional' : 'User'} 
-          color="primary" 
-          sx={{ mb: 2 }} 
+        <Chip
+          label={userType === 'lawyer' ? 'Legal Professional' : 'User'}
+          color="primary"
+          sx={{ mb: 2 }}
         />
 
         <Box sx={{ mb: 3 }}>
@@ -76,10 +77,14 @@ const FeedbackForm = ({ onSubmit, userType = 'user' }) => {
           <FormLabel component="legend">{t('feedback.accuracy')}</FormLabel>
           <RadioGroup
             value={feedback.accuracy}
-            onChange={(e) => setFeedback(prev => ({ ...prev, accuracy: e.target.value }))}
+            onChange={e => setFeedback(prev => ({ ...prev, accuracy: e.target.value }))}
           >
             <FormControlLabel value="high" control={<Radio />} label={t('feedback.accuracyHigh')} />
-            <FormControlLabel value="medium" control={<Radio />} label={t('feedback.accuracyMedium')} />
+            <FormControlLabel
+              value="medium"
+              control={<Radio />}
+              label={t('feedback.accuracyMedium')}
+            />
             <FormControlLabel value="low" control={<Radio />} label={t('feedback.accuracyLow')} />
           </RadioGroup>
         </FormControl>
@@ -88,11 +93,23 @@ const FeedbackForm = ({ onSubmit, userType = 'user' }) => {
           <FormLabel component="legend">{t('feedback.helpfulness')}</FormLabel>
           <RadioGroup
             value={feedback.helpfulness}
-            onChange={(e) => setFeedback(prev => ({ ...prev, helpfulness: e.target.value }))}
+            onChange={e => setFeedback(prev => ({ ...prev, helpfulness: e.target.value }))}
           >
-            <FormControlLabel value="very" control={<Radio />} label={t('feedback.helpfulnessVery')} />
-            <FormControlLabel value="somewhat" control={<Radio />} label={t('feedback.helpfulnessSomewhat')} />
-            <FormControlLabel value="not" control={<Radio />} label={t('feedback.helpfulnessNot')} />
+            <FormControlLabel
+              value="very"
+              control={<Radio />}
+              label={t('feedback.helpfulnessVery')}
+            />
+            <FormControlLabel
+              value="somewhat"
+              control={<Radio />}
+              label={t('feedback.helpfulnessSomewhat')}
+            />
+            <FormControlLabel
+              value="not"
+              control={<Radio />}
+              label={t('feedback.helpfulnessNot')}
+            />
           </RadioGroup>
         </FormControl>
 
@@ -100,11 +117,19 @@ const FeedbackForm = ({ onSubmit, userType = 'user' }) => {
           <FormLabel component="legend">{t('feedback.clarity')}</FormLabel>
           <RadioGroup
             value={feedback.clarity}
-            onChange={(e) => setFeedback(prev => ({ ...prev, clarity: e.target.value }))}
+            onChange={e => setFeedback(prev => ({ ...prev, clarity: e.target.value }))}
           >
             <FormControlLabel value="clear" control={<Radio />} label={t('feedback.clarityHigh')} />
-            <FormControlLabel value="moderate" control={<Radio />} label={t('feedback.clarityMedium')} />
-            <FormControlLabel value="unclear" control={<Radio />} label={t('feedback.clarityLow')} />
+            <FormControlLabel
+              value="moderate"
+              control={<Radio />}
+              label={t('feedback.clarityMedium')}
+            />
+            <FormControlLabel
+              value="unclear"
+              control={<Radio />}
+              label={t('feedback.clarityLow')}
+            />
           </RadioGroup>
         </FormControl>
 
@@ -114,30 +139,17 @@ const FeedbackForm = ({ onSubmit, userType = 'user' }) => {
           rows={4}
           label={t('feedback.suggestions')}
           value={feedback.suggestions}
-          onChange={(e) => setFeedback(prev => ({ ...prev, suggestions: e.target.value }))}
+          onChange={e => setFeedback(prev => ({ ...prev, suggestions: e.target.value }))}
           sx={{ mb: 3 }}
         />
 
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          fullWidth
-        >
+        <Button type="submit" variant="contained" color="primary" fullWidth>
           {t('feedback.submit')}
         </Button>
       </Box>
 
-      <Snackbar
-        open={submitted}
-        autoHideDuration={6000}
-        onClose={() => setSubmitted(false)}
-      >
-        <Alert
-          onClose={() => setSubmitted(false)}
-          severity="success"
-          sx={{ width: '100%' }}
-        >
+      <Snackbar open={submitted} autoHideDuration={6000} onClose={() => setSubmitted(false)}>
+        <Alert onClose={() => setSubmitted(false)} severity="success" sx={{ width: '100%' }}>
           {t('feedback.submitted')}
         </Alert>
       </Snackbar>
@@ -145,4 +157,13 @@ const FeedbackForm = ({ onSubmit, userType = 'user' }) => {
   );
 };
 
-export default FeedbackForm; 
+
+// Define PropTypes
+FeedbackForm.propTypes = {
+  /** TODO: Add description */
+  onSubmit: PropTypes.any,
+  /** TODO: Add description */
+  userType: PropTypes.any,
+};
+
+export default FeedbackForm;

@@ -10,15 +10,15 @@ i18n
   .init({
     resources: {
       en: { translation: en },
-      es: { translation: es }
+      es: { translation: es },
     },
     fallbackLng: 'en',
     interpolation: {
-      escapeValue: false
+      escapeValue: false,
     },
     returnObjects: true,
     returnEmptyString: false,
-    returnNull: false
+    returnNull: false,
   });
 
 export default i18n;

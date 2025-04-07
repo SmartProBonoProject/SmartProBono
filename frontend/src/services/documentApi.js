@@ -2,7 +2,7 @@ import config from '../config';
 
 export const documentApi = {
   // Get a document by ID
-  getDocument: async (documentId) => {
+  getDocument: async documentId => {
     try {
       const response = await fetch(`${config.apiUrl}/api/documents/${documentId}`);
       if (!response.ok) {
@@ -16,7 +16,7 @@ export const documentApi = {
   },
 
   // Create a new document
-  createDocument: async (documentData) => {
+  createDocument: async documentData => {
     try {
       const response = await fetch(`${config.apiUrl}/api/documents`, {
         method: 'POST',
@@ -56,7 +56,7 @@ export const documentApi = {
   },
 
   // Get document versions
-  getDocumentVersions: async (documentId) => {
+  getDocumentVersions: async documentId => {
     try {
       const response = await fetch(`${config.apiUrl}/api/documents/${documentId}/versions`);
       if (!response.ok) {
@@ -72,9 +72,12 @@ export const documentApi = {
   // Revert to a specific version
   revertToVersion: async (documentId, version) => {
     try {
-      const response = await fetch(`${config.apiUrl}/api/documents/${documentId}/versions/${version}`, {
-        method: 'POST',
-      });
+      const response = await fetch(
+        `${config.apiUrl}/api/documents/${documentId}/versions/${version}`,
+        {
+          method: 'POST',
+        }
+      );
       if (!response.ok) {
         throw new Error('Failed to revert document');
       }
@@ -118,24 +121,24 @@ export const documentApi = {
           formData,
         }),
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to generate document');
       }
 
       // Get the blob from the response
       const blob = await response.blob();
-      
+
       // Create a download link
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
       link.download = `generated-document-${new Date().toISOString().split('T')[0]}.pdf`;
-      
+
       // Trigger download
       document.body.appendChild(link);
       link.click();
-      
+
       // Cleanup
       link.remove();
       window.URL.revokeObjectURL(url);
@@ -148,13 +151,16 @@ export const documentApi = {
   // Save document as template
   saveAsTemplate: async (documentId, templateData) => {
     try {
-      const response = await fetch(`${config.apiUrl}/api/documents/${documentId}/save-as-template`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(templateData),
-      });
+      const response = await fetch(
+        `${config.apiUrl}/api/documents/${documentId}/save-as-template`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(templateData),
+        }
+      );
       if (!response.ok) {
         throw new Error('Failed to save document as template');
       }
@@ -163,5 +169,5 @@ export const documentApi = {
       console.error('Error saving document as template:', error);
       throw error;
     }
-  }
-}; 
+  },
+};

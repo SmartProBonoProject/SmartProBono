@@ -7,9 +7,9 @@ load_dotenv()
 AI_CONFIG = {
     'models': {
         'mistral': {
-            'name': 'Mistral-7B-Instruct',
+            'name': 'mistral',
             'specialization': ['chat', 'legal_qa', 'rights_explanation'],
-            'huggingface_model': 'mistralai/Mistral-7B-Instruct-v0.1',
+            'huggingface_model': 'mistralai/Mistral-7B-Instruct-v0.3',
             'max_tokens': 1000,
             'temperature': 0.7,
             'response_format': {
@@ -18,11 +18,25 @@ AI_CONFIG = {
                 'bullet_points': True,
                 'conversational': True
             },
-            'endpoint': 'http://localhost:11434/api/generate',
+            'endpoint': 'http://localhost:11434',
             'specializations': ['chat', 'legal_qa']
         },
+        'mixtral': {
+            'name': 'mixtral',
+            'specialization': ['complex_legal_analysis', 'multi_jurisdiction'],
+            'huggingface_model': 'mistralai/Mixtral-8x7B-Instruct-v0.1',
+            'max_tokens': 2000,
+            'temperature': 0.7,
+            'response_format': {
+                'structured': True,
+                'includes_citations': True,
+                'detailed_analysis': True,
+                'multi_perspective': True
+            },
+            'specializations': ['complex analysis', 'multi-jurisdiction']
+        },
         'llama': {
-            'name': 'Llama-2-7b-chat',
+            'name': 'llama2',
             'specialization': ['document_drafting', 'contract_generation'],
             'huggingface_model': 'meta-llama/Llama-2-7b-chat-hf',
             'max_tokens': 2000,
@@ -33,23 +47,65 @@ AI_CONFIG = {
                 'legal_formatting': True,
                 'document_style': True
             },
-            'endpoint': 'http://localhost:11434/api/generate',
+            'endpoint': 'http://localhost:11434',
             'specializations': ['document drafting', 'contracts']
         },
+        'llama3': {
+            'name': 'llama3',
+            'specialization': ['chat', 'multilingual', 'reasoning'],
+            'huggingface_model': 'meta-llama/Llama-3-8b-chat',
+            'max_tokens': 2000,
+            'temperature': 0.7,
+            'response_format': {
+                'structured': True,
+                'includes_citations': True,
+                'multilingual': True,
+                'reasoning_focused': True
+            },
+            'endpoint': 'http://localhost:11434',
+            'specializations': ['chat', 'multilingual']
+        },
+        'legal-bert': {
+            'name': 'legal-bert',
+            'specialization': ['legal_classification', 'precedent_analysis'],
+            'huggingface_model': 'nlpaueb/legal-bert-base-uncased',
+            'max_tokens': 512,
+            'temperature': 0.2,
+            'response_format': {
+                'structured': True,
+                'includes_citations': True,
+                'legal_terminology': True,
+                'classification_focused': True
+            },
+            'specializations': ['legal classification', 'precedent matching']
+        },
+        'legal-roberta': {
+            'name': 'legal-roberta',
+            'specialization': ['legal_document_analysis', 'contract_review'],
+            'huggingface_model': 'lexlms/legal-roberta-large',
+            'max_tokens': 512,
+            'temperature': 0.3,
+            'response_format': {
+                'structured': True,
+                'includes_citations': True,
+                'contract_focus': True,
+                'term_extraction': True
+            },
+            'specializations': ['document analysis', 'contract review']
+        },
         'deepseek': {
-            'name': 'DeepSeek-Coder',
-            'specialization': ['legal_research', 'rights_research'],
+            'name': 'deepseek',
+            'specialization': ['legal_research', 'code_generation'],
             'huggingface_model': 'deepseek-ai/deepseek-coder-6.7b-instruct',
             'max_tokens': 2000,
             'temperature': 0.4,
             'response_format': {
                 'structured': True,
                 'includes_citations': True,
-                'academic_style': True,
                 'research_focused': True
             },
-            'endpoint': 'http://localhost:11434/api/generate',
-            'specializations': ['legal research', 'rights analysis']
+            'endpoint': 'http://localhost:11434',
+            'specializations': ['legal research', 'code generation']
         },
         'falcon': {
             'name': 'Falcon-7B-Instruct',
@@ -66,6 +122,47 @@ AI_CONFIG = {
             'endpoint': 'http://localhost:11434/api/generate',
             'specializations': ['legal analysis', 'interpretation']
         },
+        'phi2': {
+            'name': 'Phi-2',
+            'specialization': ['quick_legal_qa', 'simple_rights'],
+            'huggingface_model': 'microsoft/phi-2',
+            'max_tokens': 1000,
+            'temperature': 0.7,
+            'response_format': {
+                'structured': True,
+                'simple_language': True,
+                'concise': True
+            },
+            'specializations': ['quick answers', 'simple explanations']
+        },
+        'openhermes': {
+            'name': 'openhermes',
+            'specialization': ['chat', 'legal_qa', 'reasoning'],
+            'huggingface_model': 'teknium/OpenHermes-2.5-Mistral-7B',
+            'max_tokens': 2000,
+            'temperature': 0.7,
+            'response_format': {
+                'structured': True,
+                'includes_citations': True,
+                'reasoning_focused': True
+            },
+            'endpoint': 'http://localhost:11434',
+            'specializations': ['chat', 'legal qa']
+        },
+        'lawgpt': {
+            'name': 'lawgpt',
+            'specialization': ['legal_analysis', 'case_law'],
+            'huggingface_model': 'law-ai/law-gpt',
+            'max_tokens': 2000,
+            'temperature': 0.3,
+            'response_format': {
+                'structured': True,
+                'includes_citations': True,
+                'legal_focused': True,
+                'case_law': True
+            },
+            'specializations': ['legal analysis', 'case law']
+        },
         'openai': {
             'name': 'GPT-3.5-turbo',
             'model': 'gpt-3.5-turbo',
@@ -73,6 +170,47 @@ AI_CONFIG = {
             'temperature': 0.7,
             'specializations': ['general', 'legal qa', 'chat'],
             'api_key': os.getenv('OPENAI_API_KEY', '')
+        },
+        'legal-bertimbau': {
+            'name': 'legal-bertimbau',
+            'specialization': ['legal_analysis', 'portuguese_law'],
+            'huggingface_model': 'rufimelo/Legal-BERTimbau-sts-large-ma-v3',
+            'max_tokens': 512,
+            'temperature': 0.2,
+            'response_format': {
+                'structured': True,
+                'includes_citations': True,
+                'legal_terminology': True,
+                'multilingual': True
+            },
+            'specializations': ['legal analysis', 'portuguese law']
+        },
+        'legalbert-large': {
+            'name': 'legalbert-large',
+            'specialization': ['legal_classification', 'document_analysis'],
+            'huggingface_model': 'pile-of-law/legalbert-large-1.7M-2',
+            'max_tokens': 512,
+            'temperature': 0.2,
+            'response_format': {
+                'structured': True,
+                'includes_citations': True,
+                'legal_terminology': True,
+                'classification_focused': True
+            },
+            'specializations': ['legal classification', 'document analysis']
+        },
+        'phi-4': {
+            'name': 'phi-4',
+            'specialization': ['quick_qa', 'code_generation'],
+            'huggingface_model': 'microsoft/phi-4',
+            'max_tokens': 1000,
+            'temperature': 0.7,
+            'response_format': {
+                'structured': True,
+                'simple_language': True,
+                'concise': True
+            },
+            'specializations': ['quick answers', 'code generation']
         }
     },
     'task_routing': {
@@ -100,6 +238,20 @@ AI_CONFIG = {
         
         # Fallback for all other tasks
         'default': 'openai'
+    },
+    'task_to_prompt': {
+        # Default templates
+        'chat': 'chat',
+        'document_drafting': 'document_drafting',
+        'contract_generation': 'contract_generation',
+        'legal_research': 'legal_qa_with_citations',  # Use citation-focused prompt
+        'rights_explanation': 'legal_qa_with_citations',  # Use citation-focused prompt
+        'rights_research': 'legal_qa_with_citations',  # Use citation-focused prompt
+        'statute_interpretation': 'statute_interpretation',
+        'complex_analysis': 'complex_analysis',
+        'procedure_guidance': 'legal_qa',
+        'legal_qa': 'legal_qa',
+        'default': 'chat'
     },
     'api_keys': {
         'openai': os.getenv('OPENAI_API_KEY'),
@@ -177,7 +329,33 @@ RESPONSE FRAMEWORK:
 
 USER QUESTION: {prompt}
 
-DETAILED RESPONSE:"""
+DETAILED RESPONSE:""",
+
+        'legal_qa_with_citations': """You are SmartProBono's Legal Research Assistant providing well-cited legal information.
+
+RESPONSE GUIDELINES:
+1. Structure your response clearly with headers and organized paragraphs
+2. Include precise legal citations in your response using these formats:
+   - Case law: Smith v. Jones, 123 U.S. 456 (1990)
+   - Statutes: 42 U.S.C. § 1983
+   - Regulations: 24 C.F.R. § 100.204
+   - Constitution: U.S. Const. art. I, § 8
+3. Mention relevant jurisdictions (Federal or specific states)
+4. Use proper legal terminology
+5. Provide a balanced view of the legal question
+6. Conclude with practical implications
+
+STRUCTURE YOUR ANSWER WITH:
+- Introductory summary
+- Applicable law with citations
+- Analysis and explanation
+- Jurisdiction-specific considerations
+- Practical implications
+- Conclusion
+
+USER QUESTION: {prompt}
+
+RESPONSE:"""
     },
     'llama': {
         'document_drafting': """[INST] <<SYS>>

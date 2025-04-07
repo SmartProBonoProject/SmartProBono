@@ -1,146 +1,179 @@
-# SmartProBono - Open-Source AI-Powered Legal Assistance Platform
+# Smart Pro Bono App
 
-SmartProBono is a comprehensive legal assistance platform designed to provide accessible legal resources and support to those in need. The platform leverages AI technology to help users understand their legal rights, generate legal documents, and connect with pro bono legal services.
+A comprehensive platform designed to connect legal professionals with individuals in need of pro bono legal assistance. This application streamlines the process of matching attorneys with clients, managing cases, scheduling appointments, and providing legal resources.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-[![Discord](https://img.shields.io/discord/1234567890?color=7289DA&label=Discord&logo=discord&logoColor=white)](https://discord.gg/smartprobono)
-[![CI](https://github.com/SmartProBono/smartProBonoAPP/actions/workflows/ci.yml/badge.svg)](https://github.com/SmartProBono/smartProBonoAPP/actions/workflows/ci.yml)
-[![Deploy](https://github.com/SmartProBono/smartProBonoAPP/actions/workflows/deploy.yml/badge.svg)](https://github.com/SmartProBono/smartProBonoAPP/actions/workflows/deploy.yml)
-[![codecov](https://codecov.io/gh/SmartProBono/smartProBonoAPP/branch/main/graph/badge.svg)](https://codecov.io/gh/SmartProBono/smartProBonoAPP)
-[![Dependency Review](https://github.com/SmartProBono/smartProBonoAPP/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/SmartProBono/smartProBonoAPP/actions/workflows/dependency-review.yml)
+## Features
 
-## 🌟 Open Source Community
+### Core Functionality
 
-SmartProBono is an open-source project! We believe in the power of community to make legal assistance more accessible to everyone. By open-sourcing our platform, we aim to:
+- **User Authentication**: Secure login and registration for attorneys, clients, and administrators
+- **Case Management**: Track and manage pro bono cases with status updates and document sharing
+- **Appointment Scheduling**: Book and manage appointments between attorneys and clients
+- **Document Management**: Upload, share, and organize legal documents
+- **Real-time Chat**: Communicate securely with clients and other professionals
+- **Legal AI Assistant**: Get automated responses to common legal questions
 
-- Foster innovation in legal tech
-- Improve accessibility to legal resources
-- Create a collaborative ecosystem of legal professionals, developers, and advocates
-- Ensure transparency and trust in our AI-powered legal tools
+### Advanced Features
 
-## 📋 Project Resources
+- **Real-time Notifications**: Keep users informed of important updates via in-app and browser notifications
+- **User Presence System**: See when users are online, offline, or typing
+- **Multi-language Support**: Accessibility for users with different language preferences
+- **Dark Mode**: Enhanced visual experience with theme customization
+- **Accessibility Options**: Features to make the application usable for everyone
+- **Rate Limiting**: Protection against abuse of real-time messaging features
 
-- [Project Roadmap](ROADMAP.md) - Our short, mid, and long-term goals
-- [Contributing Guidelines](CONTRIBUTING.md) - How to contribute to the project
-- [Code of Conduct](CODE_OF_CONDUCT.md) - Our community standards
-- [Community Strategy](COMMUNITY.md) - How we're building our community
-- [Governance Model](GOVERNANCE.md) - How decisions are made
-- [Security Policy](SECURITY.md) - How we handle security issues
+## Technology Stack
 
-## ✨ Features
+### Frontend
 
-- 🤖 **AI Legal Assistant**: Get instant answers to legal questions and guidance on legal procedures
-- 📄 **Document Generation**: Create legal documents with easy-to-use templates
-- 🔍 **Legal Rights Information**: Access comprehensive information about your legal rights
-- 🌐 **Multi-language Support**: Available in English and Spanish
-- 🎯 **Case Progress Tracking**: Monitor your legal case progress
-- 🔒 **Secure Identity Verification**: Protect sensitive information with advanced security measures
+- **React.js**: Modern, component-based UI library
+- **Material-UI**: Component library for consistent, responsive design
+- **Socket.IO Client**: Real-time bidirectional event-based communication
+- **Context API**: State management throughout the application
+- **React Router**: Navigation and routing
 
-## 🚀 Getting Started
+### Backend
+
+- **Flask**: Lightweight Python web framework
+- **Flask-SocketIO**: WebSocket server for real-time features
+- **Flask-JWT-Extended**: Authentication with JSON Web Tokens
+- **SQLAlchemy**: SQL toolkit and ORM for database interactions
+- **SQLite**: Lightweight disk-based database (development)
+- **PostgreSQL**: Production-ready relational database (production)
+
+## Getting Started
 
 ### Prerequisites
 
-- Node.js (v18 or higher)
-- Python 3.11 or higher
-- pip (Python package manager)
+- Python 3.8+
+- Node.js 14+
+- npm or yarn
+- Git
 
 ### Installation
 
-1. Clone the repository:
-```bash
-git clone https://github.com/SmartProBono/smartProBonoAPP.git
-cd smartProBonoAPP
-```
+1. Clone the repository
+   ```bash
+   git clone https://github.com/yourusername/smartprobono.git
+   cd smartprobono
+   ```
 
-2. Install dependencies:
-```bash
-npm run install-all
-```
+2. Set up the backend
+   ```bash
+   cd backend
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   pip install -r requirements.txt
+   flask db upgrade
+   ```
 
-This will:
-- Install frontend dependencies
-- Create a Python virtual environment
-- Install backend dependencies
+3. Set up the frontend
+   ```bash
+   cd ../frontend
+   npm install
+   ```
 
-3. Set up environment variables:
-
-Create `.env` files in both frontend and backend directories:
-
-Frontend (.env):
-```
-REACT_APP_API_URL=http://localhost:5001
-REACT_APP_WS_URL=http://localhost:3001
-REACT_APP_ENV=development
-```
-
-Backend (.env):
-```
-OPENAI_API_KEY=your_api_key_here
-```
+4. Create a `.env` file in the backend directory with the following variables:
+   ```
+   FLASK_APP=app.py
+   FLASK_ENV=development
+   DATABASE_URL=sqlite:///app.db
+   SECRET_KEY=your-secret-key
+   JWT_SECRET_KEY=your-jwt-secret-key
+   ```
 
 ### Running the Application
 
-Start both frontend and backend servers:
-```bash
-npm start
+1. Start the backend server
+   ```bash
+   cd backend
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   flask run
+   ```
+
+2. Start the frontend development server
+   ```bash
+   cd frontend
+   npm start
+   ```
+
+3. Open your browser and navigate to `http://localhost:3000`
+
+## Project Structure
+
+```
+smartprobono/
+├── backend/
+│   ├── app.py                 # Main Flask application
+│   ├── config.py              # Configuration settings
+│   ├── models/                # Database models
+│   ├── routes/                # API endpoints
+│   ├── services/              # Business logic services
+│   ├── utils/                 # Utility functions
+│   └── migrations/            # Database migration scripts
+├── frontend/
+│   ├── public/                # Static files
+│   ├── src/
+│   │   ├── components/        # Reusable React components
+│   │   ├── contexts/          # React Context providers
+│   │   ├── pages/             # Page components
+│   │   ├── services/          # API service functions
+│   │   ├── utils/             # Utility functions
+│   │   ├── App.js             # Main App component
+│   │   └── index.js           # Entry point
+│   └── package.json           # Dependencies and scripts
+└── docs/                      # Documentation files
 ```
 
-- Frontend will run on: http://localhost:3000
-- Backend will run on: http://localhost:5001
+## Key Features Documentation
 
-## 🔐 Security Notice
+- [Authentication System](docs/authentication.md)
+- [Notification System](docs/notifications.md)
+- [Real-time Chat](docs/chat.md)
+- [Legal AI Assistant](docs/legal-ai.md)
+- [Case Management](docs/case-management.md)
 
-⚠️ **Important**: Never commit `.env` files to version control. They contain sensitive information like API keys and should be kept private.
+## Deployment
 
-## 👥 Contributing to SmartProBono
+### Docker Deployment
 
-We welcome contributions from developers, legal professionals, and anyone passionate about improving access to justice! Here's how you can contribute:
+```bash
+docker-compose up -d
+```
 
-### For Developers
-- Fix bugs and implement new features
-- Improve performance and accessibility
-- Add tests and documentation
-- Review pull requests
+### Manual Deployment
 
-### For Legal Professionals
-- Provide legal expertise and review content
-- Suggest improvements to legal document templates
-- Help validate AI responses for accuracy
-- Identify areas where the platform can be more helpful
+1. Build the frontend
+   ```bash
+   cd frontend
+   npm run build
+   ```
 
-### How to Contribute
+2. Set up a production database (PostgreSQL recommended)
+
+3. Configure environment variables for production
+
+4. Serve the frontend using a static file server (Nginx, Apache)
+
+5. Run the backend using a production WSGI server (Gunicorn)
+   ```bash
+   gunicorn -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker -w 1 app:app
+   ```
+
+## Contributing
+
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create a feature branch: `git checkout -b feature/my-feature`
+3. Commit your changes: `git commit -am 'Add some feature'`
+4. Push to the branch: `git push origin feature/my-feature`
+5. Submit a pull request
 
-Please read our [Contributing Guidelines](CONTRIBUTING.md) for more details.
+## License
 
-## 💬 Community
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-Join our community to get help, share ideas, and collaborate:
+## Acknowledgements
 
-- [GitHub Discussions](https://github.com/SmartProBono/smartProBonoAPP/discussions)
-- [Discord Server](https://discord.gg/smartprobono)
-- [Community Forum](https://forum.smartprobono.org)
-
-## 💖 Support the Project
-
-If you find SmartProBono valuable, please consider supporting the project:
-
-- [GitHub Sponsors](https://github.com/sponsors/SmartProBono)
-- [Open Collective](https://opencollective.com/smart-pro-bono)
-- [Patreon](https://patreon.com/smartprobono)
-
-## 📜 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Thanks to all our contributors and pro bono partners
-- Special thanks to the legal community for their guidance and support
-- Built with the support of open-source tools and libraries
+- All the open-source libraries and frameworks that made this project possible
+- The legal professionals who provided domain expertise
+- YCombinator for their support and guidance

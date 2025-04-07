@@ -8,7 +8,6 @@ from .ai_service_manager import ai_service_manager, AIProvider
 load_dotenv()
 
 # Configure OpenAI and Support Information
-openai.api_key = os.getenv('OPENAI_API_KEY')
 SUPPORT_EMAIL = os.getenv('SUPPORT_EMAIL', 'support@smartprobono.org')
 SUPPORT_HOURS = '9:00 AM - 5:00 PM EST'
 SUPPORT_RESPONSE_TIME = '24-48 hours'
@@ -57,11 +56,11 @@ def detect_legal_domain(message):
     """
     message_lower = message.lower()
     domain_scores = {}
-    
+
     for domain, info in LEGAL_DOMAINS.items():
         score = sum(1 for term in info['key_terms'] if term in message_lower)
         domain_scores[domain] = score
-    
+
     # Get the domain with the highest score
     max_score_domain = max(domain_scores.items(), key=lambda x: x[1])
     return max_score_domain[0] if max_score_domain[1] > 0 else None
@@ -72,11 +71,11 @@ async def get_legal_response(message):
     """
     # Detect the legal domain
     domain = detect_legal_domain(message)
-    
+
     # Determine task type and best provider
     task_type = LEGAL_DOMAINS[domain]['task_type'] if domain else 'chat'
     provider = ai_service_manager.get_best_provider(task_type)
-    
+
     # Build the system prompt based on the detected domain
     base_prompt = """You are an AI legal assistant providing general legal information and guidance. Your role is to:
 
@@ -109,14 +108,14 @@ Guidelines for responses:
             provider=provider,
             task_type=task_type
         )
-        
+
         # Add domain-specific disclaimer
         domain_disclaimer = ""
         if domain:
             domain_disclaimer = f"\n\nThis information relates to general {domain.replace('_', ' ')} matters. "
-        
+
         general_disclaimer = "Please note: This information is for general guidance only and may not apply to your specific situation. For specific legal advice, please consult with a qualified legal professional."
-        
+
         # Add support information for complex queries or if certain keywords are present
         complex_keywords = ['complex', 'complicated', 'difficult', 'unsure', 'help', 'support']
         if any(keyword in message.lower() for keyword in complex_keywords) or len(message.split()) > 20:
@@ -205,24 +204,24 @@ def log_interaction(user_message, ai_response, domain):
             'user_message': user_message,
             'ai_response': ai_response
         }
-        
+
         # Create logs directory if it doesn't exist
         if not os.path.exists('logs'):
             os.makedirs('logs')
-        
+
         # Write to log file
         log_file = f"logs/interactions_{datetime.now().strftime('%Y%m%d')}.json"
-        
+
         existing_logs = []
         if os.path.exists(log_file):
             with open(log_file, 'r') as f:
                 existing_logs = json.load(f)
-        
+
         existing_logs.append(log_entry)
-        
+
         with open(log_file, 'w') as f:
             json.dump(existing_logs, f, indent=2)
-            
+
     except Exception as e:
         print(f"Error logging interaction: {str(e)}")
         # Don't raise the exception as logging failure shouldn't affect the main functionality 

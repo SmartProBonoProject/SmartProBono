@@ -1,57 +1,40 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {
-  Box,
-  TextField,
-  Button,
-  Paper,
-  Typography,
-  CircularProgress,
-  Chip,
-} from '@mui/material';
+import { Box, TextField, Button, Paper, Typography, CircularProgress, Chip } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import axios from 'axios';
-
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [currentModel, setCurrentModel] = useState('');
   const messagesEndRef = useRef(null);
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
-
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     if (!input.trim()) return;
-
     const userMessage = {
       text: input,
       sender: 'user',
       timestamp: new Date().toISOString(),
     };
-
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
-
     try {
       const response = await axios.post('/api/chat', {
         message: input,
       });
-
       const aiMessage = {
         text: response.data.response,
         sender: 'ai',
         timestamp: new Date().toISOString(),
         model: response.data.model,
       };
-
       setMessages(prev => [...prev, aiMessage]);
       setCurrentModel(response.data.model);
     } catch (error) {
@@ -67,7 +50,6 @@ const Chat = () => {
       setIsLoading(false);
     }
   };
-
   const MessageBubble = ({ message }) => (
     <Box
       sx={{
@@ -108,7 +90,6 @@ const Chat = () => {
       </Typography>
     </Box>
   );
-
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Box
@@ -145,7 +126,7 @@ const Chat = () => {
             variant="outlined"
             placeholder="Type your message..."
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={e => setInput(e.target.value)}
             disabled={isLoading}
             multiline
             maxRows={4}
@@ -163,5 +144,4 @@ const Chat = () => {
     </Box>
   );
 };
-
-export default Chat; 
+export default Chat;

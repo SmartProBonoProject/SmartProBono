@@ -1,0 +1,1 @@
+{"timestamp": 1743455333.460918, "response": {"answer": "Sorry, I couldn't connect to the AI service. Please check if Ollama is running.", "error": "Failed to connect to Ollama API: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=30)", "sources": [], "provider": "error", "model": "llama3:8b"}}

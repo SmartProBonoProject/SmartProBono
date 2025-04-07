@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, CircularProgress, Typography } from '@mui/material';
+import PropTypes from 'prop-types';
 
 function LoadingSpinner({ message = 'Loading...' }) {
   return (
@@ -18,4 +19,9 @@ function LoadingSpinner({ message = 'Loading...' }) {
   );
 }
 
-export default LoadingSpinner; 
+// Define PropTypes
+LoadingSpinner.propTypes = {
+  message: PropTypes.string,
+};
+
+export default LoadingSpinner;

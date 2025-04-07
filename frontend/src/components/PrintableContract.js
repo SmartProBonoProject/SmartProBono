@@ -1,24 +1,18 @@
 import React from 'react';
-import { 
-  Paper, 
-  Typography, 
-  Box,
-  Divider,
-  Grid
-} from '@mui/material';
+import { Paper, Typography, Box, Divider, Grid } from '@mui/material';
 
 function PrintableContract({ content, metadata }) {
   return (
-    <Paper 
-      sx={{ 
-        p: 4, 
-        m: 2, 
-        maxWidth: '800px', 
+    <Paper
+      sx={{
+        p: 4,
+        m: 2,
+        maxWidth: '800px',
         margin: 'auto',
         '@media print': {
           boxShadow: 'none',
-          margin: 0
-        }
+          margin: 0,
+        },
       }}
     >
       <Box className="contract-header" sx={{ mb: 4, textAlign: 'center' }}>
@@ -47,9 +41,7 @@ function PrintableContract({ content, metadata }) {
               Party 1:
             </Typography>
             <Box sx={{ mt: 4, borderTop: '1px solid #000', width: '80%' }}>
-              <Typography variant="caption">
-                Signature & Date
-              </Typography>
+              <Typography variant="caption">Signature & Date</Typography>
             </Box>
           </Grid>
           <Grid item xs={6}>
@@ -57,9 +49,7 @@ function PrintableContract({ content, metadata }) {
               Party 2:
             </Typography>
             <Box sx={{ mt: 4, borderTop: '1px solid #000', width: '80%' }}>
-              <Typography variant="caption">
-                Signature & Date
-              </Typography>
+              <Typography variant="caption">Signature & Date</Typography>
             </Box>
           </Grid>
         </Grid>

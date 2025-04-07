@@ -33,17 +33,10 @@ const NotFoundPage = () => {
           {t('errors.notFound.message')}
         </Typography>
         <Box sx={{ mt: 4 }}>
-          <Button
-            variant="contained"
-            onClick={() => navigate('/')}
-            sx={{ mr: 2 }}
-          >
+          <Button variant="contained" onClick={() => navigate('/')} sx={{ mr: 2 }}>
             {t('common.backToHome')}
           </Button>
-          <Button
-            variant="outlined"
-            onClick={() => navigate(-1)}
-          >
+          <Button variant="outlined" onClick={() => navigate(-1)}>
             {t('common.goBack')}
           </Button>
         </Box>
@@ -52,4 +45,4 @@ const NotFoundPage = () => {
   );
 };
 
-export default NotFoundPage; 
+export default NotFoundPage;

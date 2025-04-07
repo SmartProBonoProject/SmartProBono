@@ -1,27 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import {
-  IconButton,
-  Tooltip,
-  CircularProgress,
-  Alert,
-  Snackbar,
-} from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
+import { IconButton, Tooltip, CircularProgress, Alert, Snackbar } from '@mui/material';
 import { Mic as MicIcon, MicOff as MicOffIcon } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 
 const VoiceInput = ({ onTranscript, isListening, setIsListening }) => {
   const { t } = useTranslation();
+  const recognition = useRef(null);
   const [error, setError] = useState(null);
-  const [recognition, setRecognition] = useState(null);
 
   useEffect(() => {
     if ('webkitSpeechRecognition' in window) {
-      const recognition = new window.webkitSpeechRecognition();
-      recognition.continuous = true;
-      recognition.interimResults = true;
-      recognition.lang = document.documentElement.lang || 'en-US';
+      recognition.current = new window.webkitSpeechRecognition();
+      recognition.current.continuous = true;
+      recognition.current.interimResults = true;
+      recognition.current.lang = document.documentElement.lang || 'en-US';
 
-      recognition.onresult = (event) => {
+      recognition.current.onresult = (event) => {
         const transcript = Array.from(event.results)
           .map(result => result[0])
           .map(result => result.transcript)
@@ -29,47 +24,62 @@ const VoiceInput = ({ onTranscript, isListening, setIsListening }) => {
         onTranscript(transcript);
       };
 
-      recognition.onerror = (event) => {
+      recognition.current.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
         setError(event.error);
         setIsListening(false);
       };
 
-      recognition.onend = () => {
+      recognition.current.onend = () => {
         setIsListening(false);
       };
-
-      setRecognition(recognition);
     }
 
     return () => {
-      if (recognition) {
-        recognition.stop();
+      if (recognition.current) {
+        recognition.current.stop();
       }
     };
   }, [onTranscript, setIsListening]);
 
-  const toggleListening = () => {
-    if (!recognition) {
+  useEffect(() => {
+    if (recognition.current) {
+      if (isListening) {
+        recognition.current.start();
+      } else {
+        recognition.current.stop();
+      }
+    }
+  }, [isListening]);
+
+  const handleToggle = () => {
+    if (!recognition.current) {
       setError('browser_unsupported');
       return;
     }
 
     if (isListening) {
-      recognition.stop();
+      recognition.current.stop();
     } else {
       setError(null);
-      recognition.start();
+      recognition.current.start();
       setIsListening(true);
     }
   };
 
   return (
     <>
-      <Tooltip title={isListening ? t('accessibility.voiceInput.stop') : t('accessibility.voiceInput.start')}>
+      <Tooltip
+        title={
+          isListening ? t('accessibility.voiceInput.stop') : t('accessibility.voiceInput.start')
+        }
+      >
         <IconButton
-          onClick={toggleListening}
+          onClick={handleToggle}
           color={isListening ? 'error' : 'primary'}
-          aria-label={isListening ? t('accessibility.voiceInput.stop') : t('accessibility.voiceInput.start')}
+          aria-label={
+            isListening ? t('accessibility.voiceInput.stop') : t('accessibility.voiceInput.start')
+          }
         >
           {isListening ? (
             <>
@@ -89,16 +99,8 @@ const VoiceInput = ({ onTranscript, isListening, setIsListening }) => {
         </IconButton>
       </Tooltip>
 
-      <Snackbar
-        open={!!error}
-        autoHideDuration={6000}
-        onClose={() => setError(null)}
-      >
-        <Alert
-          onClose={() => setError(null)}
-          severity="error"
-          sx={{ width: '100%' }}
-        >
+      <Snackbar open={!!error} autoHideDuration={6000} onClose={() => setError(null)}>
+        <Alert onClose={() => setError(null)} severity="error" sx={{ width: '100%' }}>
           {error === 'browser_unsupported'
             ? t('accessibility.voiceInput.error')
             : t('common.error')}
@@ -108,4 +110,10 @@ const VoiceInput = ({ onTranscript, isListening, setIsListening }) => {
   );
 };
 
-export default VoiceInput; 
+VoiceInput.propTypes = {
+  onTranscript: PropTypes.func.isRequired,
+  isListening: PropTypes.bool.isRequired,
+  setIsListening: PropTypes.func.isRequired,
+};
+
+export default VoiceInput;

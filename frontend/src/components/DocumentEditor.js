@@ -14,7 +14,7 @@ import {
   Divider,
   Alert,
   CircularProgress,
-  Tooltip
+  Tooltip,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import UndoIcon from '@mui/icons-material/Undo';
@@ -22,14 +22,8 @@ import RedoIcon from '@mui/icons-material/Redo';
 import HistoryIcon from '@mui/icons-material/History';
 import PreviewIcon from '@mui/icons-material/Preview';
 import { Editor } from '@tinymce/tinymce-react';
-
-const DocumentEditor = ({ 
-  documentId, 
-  initialContent, 
-  template, 
-  onSave, 
-  readOnly = false 
-}) => {
+import PropTypes from 'prop-types';
+const DocumentEditor = ({ documentId, initialContent, template, onSave, readOnly = false }) => {
   const [content, setContent] = useState(initialContent || '');
   const [history, setHistory] = useState([initialContent]);
   const [historyIndex, setHistoryIndex] = useState(0);
@@ -38,7 +32,6 @@ const DocumentEditor = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [autoSaveTimer, setAutoSaveTimer] = useState(null);
-
   useEffect(() => {
     return () => {
       if (autoSaveTimer) {
@@ -46,29 +39,23 @@ const DocumentEditor = ({
       }
     };
   }, [autoSaveTimer]);
-
-  const handleEditorChange = (newContent) => {
+  const handleEditorChange = newContent => {
     setContent(newContent);
-    
     // Clear any existing auto-save timer
     if (autoSaveTimer) {
       clearTimeout(autoSaveTimer);
     }
-    
     // Set new auto-save timer
     const timer = setTimeout(() => {
       handleSave(newContent, true);
     }, 30000); // Auto-save after 30 seconds of inactivity
-    
     setAutoSaveTimer(timer);
   };
-
   const handleSave = async (contentToSave = content, isAutoSave = false) => {
     setLoading(true);
     setError(null);
     try {
       await onSave(contentToSave);
-      
       // Add to history if not auto-save
       if (!isAutoSave) {
         setHistory(prev => [...prev.slice(0, historyIndex + 1), contentToSave]);
@@ -80,27 +67,23 @@ const DocumentEditor = ({
       setLoading(false);
     }
   };
-
   const handleUndo = () => {
     if (historyIndex > 0) {
       setHistoryIndex(prev => prev - 1);
       setContent(history[historyIndex - 1]);
     }
   };
-
   const handleRedo = () => {
     if (historyIndex < history.length - 1) {
       setHistoryIndex(prev => prev + 1);
       setContent(history[historyIndex + 1]);
     }
   };
-
-  const handleRevertToVersion = (index) => {
+  const handleRevertToVersion = index => {
     setHistoryIndex(index);
     setContent(history[index]);
     setShowHistory(false);
   };
-
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       {/* Toolbar */}
@@ -118,17 +101,14 @@ const DocumentEditor = ({
           </Grid>
           <Grid item>
             <Tooltip title="Undo">
-              <IconButton 
-                onClick={handleUndo} 
-                disabled={historyIndex === 0 || readOnly}
-              >
+              <IconButton onClick={handleUndo} disabled={historyIndex === 0 || readOnly}>
                 <UndoIcon />
               </IconButton>
             </Tooltip>
           </Grid>
           <Grid item>
             <Tooltip title="Redo">
-              <IconButton 
+              <IconButton
                 onClick={handleRedo}
                 disabled={historyIndex === history.length - 1 || readOnly}
               >
@@ -144,7 +124,7 @@ const DocumentEditor = ({
             </Tooltip>
           </Grid>
           <Grid item>
-            <Tooltip title={previewMode ? "Edit Mode" : "Preview Mode"}>
+            <Tooltip title={previewMode ? 'Edit Mode' : 'Preview Mode'}>
               <IconButton onClick={() => setPreviewMode(!previewMode)}>
                 <PreviewIcon />
               </IconButton>
@@ -157,13 +137,11 @@ const DocumentEditor = ({
           )}
         </Grid>
       </Paper>
-
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
-
       {/* Editor */}
       <Box sx={{ flexGrow: 1 }}>
         {previewMode ? (
@@ -179,28 +157,38 @@ const DocumentEditor = ({
               height: '100%',
               menubar: true,
               plugins: [
-                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+                'advlist',
+                'autolink',
+                'lists',
+                'link',
+                'image',
+                'charmap',
+                'preview',
+                'anchor',
+                'searchreplace',
+                'visualblocks',
+                'code',
+                'fullscreen',
+                'insertdatetime',
+                'media',
+                'table',
+                'code',
+                'help',
+                'wordcount',
               ],
-              toolbar: 'undo redo | blocks | ' +
+              toolbar:
+                'undo redo | blocks | ' +
                 'bold italic forecolor | alignleft aligncenter ' +
                 'alignright alignjustify | bullist numlist outdent indent | ' +
                 'removeformat | help',
               content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-              readonly: readOnly
+              readonly: readOnly,
             }}
           />
         )}
       </Box>
-
       {/* Version History Dialog */}
-      <Dialog
-        open={showHistory}
-        onClose={() => setShowHistory(false)}
-        maxWidth="md"
-        fullWidth
-      >
+      <Dialog open={showHistory} onClose={() => setShowHistory(false)} maxWidth="md" fullWidth>
         <DialogTitle>Version History</DialogTitle>
         <DialogContent>
           <Box sx={{ mt: 2 }}>
@@ -210,13 +198,13 @@ const DocumentEditor = ({
                   Version {index + 1}
                   {index === historyIndex && ' (Current)'}
                 </Typography>
-                <Box 
-                  sx={{ 
-                    p: 2, 
-                    bgcolor: 'grey.100', 
+                <Box
+                  sx={{
+                    p: 2,
+                    bgcolor: 'grey.100',
                     borderRadius: 1,
                     maxHeight: '100px',
-                    overflow: 'hidden'
+                    overflow: 'hidden',
                   }}
                 >
                   <div dangerouslySetInnerHTML={{ __html: version.slice(0, 200) + '...' }} />
@@ -242,4 +230,18 @@ const DocumentEditor = ({
   );
 };
 
-export default DocumentEditor; 
+// Define PropTypes
+DocumentEditor.propTypes = {
+  /** TODO: Add description */
+  documentId: PropTypes.any,
+  /** TODO: Add description */
+  initialContent: PropTypes.any,
+  /** TODO: Add description */
+  template: PropTypes.any,
+  /** TODO: Add description */
+  onSave: PropTypes.any,
+  /** TODO: Add description */
+  readOnly: PropTypes.any,
+};
+
+export default DocumentEditor;

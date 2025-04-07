@@ -26,17 +26,14 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { useTranslation } from 'react-i18next';
-
 const FeedbackAnalytics = () => {
   const { t } = useTranslation();
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   useEffect(() => {
     fetchAnalytics();
   }, []);
-
   const fetchAnalytics = async () => {
     try {
       const response = await fetch('/api/feedback/analytics');
@@ -49,7 +46,6 @@ const FeedbackAnalytics = () => {
       setLoading(false);
     }
   };
-
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
@@ -57,7 +53,6 @@ const FeedbackAnalytics = () => {
       </Box>
     );
   }
-
   if (error) {
     return (
       <Alert severity="error" sx={{ m: 2 }}>
@@ -65,20 +60,17 @@ const FeedbackAnalytics = () => {
       </Alert>
     );
   }
-
   const prepareChartData = (breakdown, title) => {
     return Object.entries(breakdown).map(([key, value]) => ({
       name: key.charAt(0).toUpperCase() + key.slice(1),
       value: value,
     }));
   };
-
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
         Feedback Analytics
       </Typography>
-
       <Grid container spacing={3}>
         {/* Overview Cards */}
         <Grid item xs={12} md={4}>
@@ -87,13 +79,10 @@ const FeedbackAnalytics = () => {
               <Typography variant="h6" gutterBottom>
                 Total Feedback
               </Typography>
-              <Typography variant="h3">
-                {analytics.total_feedback}
-              </Typography>
+              <Typography variant="h3">{analytics.total_feedback}</Typography>
             </CardContent>
           </Card>
         </Grid>
-
         <Grid item xs={12} md={4}>
           <Card>
             <CardContent>
@@ -109,7 +98,6 @@ const FeedbackAnalytics = () => {
             </CardContent>
           </Card>
         </Grid>
-
         {/* Charts */}
         <Grid item xs={12}>
           <Paper sx={{ p: 3 }}>
@@ -137,7 +125,6 @@ const FeedbackAnalytics = () => {
             </Box>
           </Paper>
         </Grid>
-
         {/* Recent Feedback */}
         <Grid item xs={12}>
           <Paper sx={{ p: 3 }}>
@@ -152,11 +139,11 @@ const FeedbackAnalytics = () => {
                       primary={
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                           <Rating value={feedback.rating} readOnly size="small" />
-                          <Chip 
-                            label={feedback.userType} 
-                            size="small" 
-                            color="primary" 
-                            variant="outlined" 
+                          <Chip
+                            label={feedback.userType}
+                            size="small"
+                            color="primary"
+                            variant="outlined"
                           />
                           <Typography variant="caption" color="text.secondary">
                             {new Date(feedback.timestamp).toLocaleString()}
@@ -166,13 +153,12 @@ const FeedbackAnalytics = () => {
                       secondary={
                         <Box sx={{ mt: 1 }}>
                           <Typography variant="body2" color="text.secondary" paragraph>
-                            Accuracy: {feedback.accuracy}, 
-                            Helpfulness: {feedback.helpfulness}, 
+                            Accuracy: {feedback.accuracy}, Helpfulness: {feedback.helpfulness},
                             Clarity: {feedback.clarity}
                           </Typography>
                           {feedback.suggestions && (
                             <Typography variant="body2" color="text.secondary">
-                              "{feedback.suggestions}"
+                              &quot;{feedback.suggestions}&quot;
                             </Typography>
                           )}
                         </Box>
@@ -189,5 +175,4 @@ const FeedbackAnalytics = () => {
     </Box>
   );
 };
-
-export default FeedbackAnalytics; 
+export default FeedbackAnalytics;

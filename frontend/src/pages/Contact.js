@@ -10,7 +10,7 @@ import {
   CardContent,
   Alert,
   Snackbar,
-  Stack
+  Stack,
 } from '@mui/material';
 import EmailIcon from '@mui/icons-material/Email';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -24,18 +24,18 @@ function Contact() {
     lastName: '',
     email: '',
     phone: '',
-    message: ''
+    message: '',
   });
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
     // Handle form submission here
     setShowSuccess(true);
@@ -44,15 +44,12 @@ function Contact() {
       lastName: '',
       email: '',
       phone: '',
-      message: ''
+      message: '',
     });
   };
 
   return (
-    <PageLayout
-      title="Contact Us"
-      description="Get in touch with our legal team for assistance"
-    >
+    <PageLayout title="Contact Us" description="Get in touch with our legal team for assistance">
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={4}>
@@ -62,7 +59,9 @@ function Contact() {
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <EmailIcon color="primary" sx={{ mr: 2 }} />
                     <Box>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>Email</Typography>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                        Email
+                      </Typography>
                       <Typography variant="body2" color="text.secondary">
                         support@smartprobono.com
                       </Typography>
@@ -76,7 +75,9 @@ function Contact() {
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <PhoneIcon color="primary" sx={{ mr: 2 }} />
                     <Box>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>Phone</Typography>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                        Phone
+                      </Typography>
                       <Typography variant="body2" color="text.secondary">
                         (555) 123-4567
                       </Typography>
@@ -90,7 +91,9 @@ function Contact() {
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <LocationOnIcon color="primary" sx={{ mr: 2 }} />
                     <Box>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>Location</Typography>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                        Location
+                      </Typography>
                       <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.4 }}>
                         123 Legal Street, San Francisco, CA 94105
                       </Typography>
@@ -181,8 +184,8 @@ function Contact() {
                       background: 'linear-gradient(45deg, #1976d2 30%, #2196f3 90%)',
                       '&:hover': {
                         boxShadow: '0 2px 8px rgba(33, 150, 243, .3)',
-                        transform: 'translateY(-2px)'
-                      }
+                        transform: 'translateY(-2px)',
+                      },
                     }}
                   >
                     Send Message
@@ -199,11 +202,7 @@ function Contact() {
           onClose={() => setShowSuccess(false)}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         >
-          <Alert 
-            onClose={() => setShowSuccess(false)} 
-            severity="success"
-            sx={{ width: '100%' }}
-          >
+          <Alert onClose={() => setShowSuccess(false)} severity="success" sx={{ width: '100%' }}>
             Message sent successfully!
           </Alert>
         </Snackbar>

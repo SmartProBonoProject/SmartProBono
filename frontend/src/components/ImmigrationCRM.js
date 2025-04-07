@@ -25,16 +25,13 @@ import {
   InputLabel,
   Select,
   CircularProgress,
-  Alert
+  Alert,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
-
 const caseTypes = [
   'Citizenship',
   'Family-Based Immigration',
@@ -44,9 +41,8 @@ const caseTypes = [
   'Work Visa',
   'Green Card',
   'DACA',
-  'Other'
+  'Other',
 ];
-
 const caseStatus = [
   'New',
   'In Progress',
@@ -55,9 +51,8 @@ const caseStatus = [
   'Approved',
   'Denied',
   'Appealing',
-  'Closed'
+  'Closed',
 ];
-
 const ImmigrationCRM = () => {
   const [cases, setCases] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
@@ -71,13 +66,11 @@ const ImmigrationCRM = () => {
     priority: 'Medium',
     dueDate: null,
     description: '',
-    documents: []
+    documents: [],
   });
-
   useEffect(() => {
     fetchCases();
   }, []);
-
   const fetchCases = async () => {
     setLoading(true);
     try {
@@ -91,21 +84,18 @@ const ImmigrationCRM = () => {
       setLoading(false);
     }
   };
-
-  const handleInputChange = (field) => (event) => {
+  const handleInputChange = field => event => {
     setFormData({
       ...formData,
-      [field]: event.target.value
+      [field]: event.target.value,
     });
   };
-
-  const handleDateChange = (date) => {
+  const handleDateChange = date => {
     setFormData({
       ...formData,
-      dueDate: date
+      dueDate: date,
     });
   };
-
   const handleSubmit = async () => {
     setLoading(true);
     setError(null);
@@ -115,13 +105,11 @@ const ImmigrationCRM = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
-
       if (!response.ok) {
         throw new Error('Failed to save case');
       }
-
       fetchCases();
       handleCloseDialog();
     } catch (err) {
@@ -130,7 +118,6 @@ const ImmigrationCRM = () => {
       setLoading(false);
     }
   };
-
   const handleOpenDialog = (caseData = null) => {
     if (caseData) {
       setSelectedCase(caseData);
@@ -144,12 +131,11 @@ const ImmigrationCRM = () => {
         priority: 'Medium',
         dueDate: null,
         description: '',
-        documents: []
+        documents: [],
       });
     }
     setOpenDialog(true);
   };
-
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setSelectedCase(null);
@@ -160,48 +146,37 @@ const ImmigrationCRM = () => {
       priority: 'Medium',
       dueDate: null,
       description: '',
-      documents: []
+      documents: [],
     });
   };
-
-  const handleDeleteCase = async (caseId) => {
+  const handleDeleteCase = async caseId => {
     if (!window.confirm('Are you sure you want to delete this case?')) return;
-
     try {
       const response = await fetch(`/api/immigration/cases/${caseId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
       });
-
       if (!response.ok) {
         throw new Error('Failed to delete case');
       }
-
       fetchCases();
     } catch (err) {
       setError(err.message);
     }
   };
-
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Box sx={{ p: 3 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
           <Typography variant="h4">Immigration Case Management</Typography>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={() => handleOpenDialog()}
-          >
+          <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpenDialog()}>
             New Case
           </Button>
         </Box>
-
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
             {error}
           </Alert>
         )}
-
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -221,55 +196,54 @@ const ImmigrationCRM = () => {
                     <CircularProgress />
                   </TableCell>
                 </TableRow>
-              ) : cases.map((caseItem) => (
-                <TableRow key={caseItem.id}>
-                  <TableCell>{caseItem.clientName}</TableCell>
-                  <TableCell>{caseItem.caseType}</TableCell>
-                  <TableCell>
-                    <Chip
-                      label={caseItem.status}
-                      color={
-                        caseItem.status === 'Approved' ? 'success' :
-                        caseItem.status === 'Denied' ? 'error' :
-                        caseItem.status === 'In Progress' ? 'primary' :
-                        'default'
-                      }
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      label={caseItem.priority}
-                      color={
-                        caseItem.priority === 'High' ? 'error' :
-                        caseItem.priority === 'Medium' ? 'warning' :
-                        'info'
-                      }
-                    />
-                  </TableCell>
-                  <TableCell>{new Date(caseItem.dueDate).toLocaleDateString()}</TableCell>
-                  <TableCell>
-                    <IconButton onClick={() => handleOpenDialog(caseItem)}>
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton onClick={() => handleDeleteCase(caseItem.id)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
+              ) : (
+                cases.map(caseItem => (
+                  <TableRow key={caseItem.id}>
+                    <TableCell>{caseItem.clientName}</TableCell>
+                    <TableCell>{caseItem.caseType}</TableCell>
+                    <TableCell>
+                      <Chip
+                        label={caseItem.status}
+                        color={
+                          caseItem.status === 'Approved'
+                            ? 'success'
+                            : caseItem.status === 'Denied'
+                              ? 'error'
+                              : caseItem.status === 'In Progress'
+                                ? 'primary'
+                                : 'default'
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Chip
+                        label={caseItem.priority}
+                        color={
+                          caseItem.priority === 'High'
+                            ? 'error'
+                            : caseItem.priority === 'Medium'
+                              ? 'warning'
+                              : 'info'
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>{new Date(caseItem.dueDate).toLocaleDateString()}</TableCell>
+                    <TableCell>
+                      <IconButton onClick={() => handleOpenDialog(caseItem)}>
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton onClick={() => handleDeleteCase(caseItem.id)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </TableContainer>
-
-        <Dialog
-          open={openDialog}
-          onClose={handleCloseDialog}
-          maxWidth="md"
-          fullWidth
-        >
-          <DialogTitle>
-            {selectedCase ? 'Edit Case' : 'New Case'}
-          </DialogTitle>
+        <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
+          <DialogTitle>{selectedCase ? 'Edit Case' : 'New Case'}</DialogTitle>
           <DialogContent>
             <Grid container spacing={2} sx={{ mt: 1 }}>
               <Grid item xs={12} sm={6}>
@@ -289,8 +263,10 @@ const ImmigrationCRM = () => {
                     onChange={handleInputChange('caseType')}
                     label="Case Type"
                   >
-                    {caseTypes.map((type) => (
-                      <MenuItem key={type} value={type}>{type}</MenuItem>
+                    {caseTypes.map(type => (
+                      <MenuItem key={type} value={type}>
+                        {type}
+                      </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
@@ -303,8 +279,10 @@ const ImmigrationCRM = () => {
                     onChange={handleInputChange('status')}
                     label="Status"
                   >
-                    {caseStatus.map((status) => (
-                      <MenuItem key={status} value={status}>{status}</MenuItem>
+                    {caseStatus.map(status => (
+                      <MenuItem key={status} value={status}>
+                        {status}
+                      </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
@@ -328,7 +306,7 @@ const ImmigrationCRM = () => {
                   label="Due Date"
                   value={formData.dueDate}
                   onChange={handleDateChange}
-                  renderInput={(params) => <TextField {...params} fullWidth />}
+                  renderInput={params => <TextField {...params} fullWidth />}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -345,11 +323,7 @@ const ImmigrationCRM = () => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDialog}>Cancel</Button>
-            <Button
-              onClick={handleSubmit}
-              variant="contained"
-              disabled={loading}
-            >
+            <Button onClick={handleSubmit} variant="contained" disabled={loading}>
               {loading ? <CircularProgress size={24} /> : 'Save'}
             </Button>
           </DialogActions>
@@ -358,5 +332,4 @@ const ImmigrationCRM = () => {
     </LocalizationProvider>
   );
 };
-
-export default ImmigrationCRM; 
+export default ImmigrationCRM;

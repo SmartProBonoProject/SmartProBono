@@ -10,7 +10,7 @@ import {
   TextField,
   Chip,
   Paper,
-  InputAdornment
+  InputAdornment,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import DescriptionIcon from '@mui/icons-material/Description';
@@ -41,9 +41,9 @@ function Resources() {
                 bgcolor: 'white',
                 borderRadius: 2,
                 '& fieldset': {
-                  borderColor: 'divider'
-                }
-              }
+                  borderColor: 'divider',
+                },
+              },
             }}
           />
         </Box>
@@ -59,7 +59,9 @@ function Resources() {
           <Grid item xs={12} md={4}>
             <Card sx={{ height: '100%', borderRadius: 3, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
               <CardContent>
-                <Typography variant="h6" gutterBottom>Legal Forms Library</Typography>
+                <Typography variant="h6" gutterBottom>
+                  Legal Forms Library
+                </Typography>
                 <Typography color="text.secondary" sx={{ mb: 2 }}>
                   Access common legal forms and documents
                 </Typography>
@@ -74,7 +76,7 @@ function Resources() {
                   sx={{
                     borderRadius: 2,
                     textTransform: 'none',
-                    py: 1
+                    py: 1,
                   }}
                 >
                   Access Documents
@@ -86,7 +88,9 @@ function Resources() {
           <Grid item xs={12} md={4}>
             <Card sx={{ height: '100%', borderRadius: 3, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
               <CardContent>
-                <Typography variant="h6" gutterBottom>Court Documents</Typography>
+                <Typography variant="h6" gutterBottom>
+                  Court Documents
+                </Typography>
                 <Typography color="text.secondary" sx={{ mb: 2 }}>
                   Standard court filing templates and examples
                 </Typography>
@@ -101,7 +105,7 @@ function Resources() {
                   sx={{
                     borderRadius: 2,
                     textTransform: 'none',
-                    py: 1
+                    py: 1,
                   }}
                 >
                   Access Documents
@@ -113,7 +117,9 @@ function Resources() {
           <Grid item xs={12} md={4}>
             <Card sx={{ height: '100%', borderRadius: 3, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
               <CardContent>
-                <Typography variant="h6" gutterBottom>Legal Guides</Typography>
+                <Typography variant="h6" gutterBottom>
+                  Legal Guides
+                </Typography>
                 <Typography color="text.secondary" sx={{ mb: 2 }}>
                   Step-by-step guides for legal procedures
                 </Typography>
@@ -128,7 +134,7 @@ function Resources() {
                   sx={{
                     borderRadius: 2,
                     textTransform: 'none',
-                    py: 1
+                    py: 1,
                   }}
                 >
                   Access Documents
@@ -149,7 +155,9 @@ function Resources() {
           <Grid item xs={12} md={4}>
             <Card sx={{ height: '100%', borderRadius: 3, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
               <CardContent>
-                <Typography variant="h6" gutterBottom>Know Your Rights</Typography>
+                <Typography variant="h6" gutterBottom>
+                  Know Your Rights
+                </Typography>
                 <Typography color="text.secondary" sx={{ mb: 2 }}>
                   Essential information about legal rights and protections
                 </Typography>
@@ -164,7 +172,7 @@ function Resources() {
                   sx={{
                     borderRadius: 2,
                     textTransform: 'none',
-                    py: 1
+                    py: 1,
                   }}
                 >
                   Learn More
@@ -176,7 +184,9 @@ function Resources() {
           <Grid item xs={12} md={4}>
             <Card sx={{ height: '100%', borderRadius: 3, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
               <CardContent>
-                <Typography variant="h6" gutterBottom>Legal Procedures</Typography>
+                <Typography variant="h6" gutterBottom>
+                  Legal Procedures
+                </Typography>
                 <Typography color="text.secondary" sx={{ mb: 2 }}>
                   Understanding court procedures and legal processes
                 </Typography>
@@ -191,7 +201,7 @@ function Resources() {
                   sx={{
                     borderRadius: 2,
                     textTransform: 'none',
-                    py: 1
+                    py: 1,
                   }}
                 >
                   Learn More
@@ -203,7 +213,9 @@ function Resources() {
           <Grid item xs={12} md={4}>
             <Card sx={{ height: '100%', borderRadius: 3, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
               <CardContent>
-                <Typography variant="h6" gutterBottom>Legal Terms</Typography>
+                <Typography variant="h6" gutterBottom>
+                  Legal Terms
+                </Typography>
                 <Typography color="text.secondary" sx={{ mb: 2 }}>
                   Dictionary of common legal terms and definitions
                 </Typography>
@@ -218,7 +230,7 @@ function Resources() {
                   sx={{
                     borderRadius: 2,
                     textTransform: 'none',
-                    py: 1
+                    py: 1,
                   }}
                 >
                   Learn More

@@ -1,20 +1,11 @@
-import React, { useState } from 'react';
-import {
-  Box,
-  Button,
-  Typography,
-  Paper,
-  ButtonGroup,
-  Card,
-  CardContent,
-} from '@mui/material';
+import { Box, Button, Typography, ButtonGroup, Card, CardContent } from '@mui/material';
 import GavelIcon from '@mui/icons-material/Gavel';
 import BusinessIcon from '@mui/icons-material/Business';
 import HomeIcon from '@mui/icons-material/Home';
 import WorkIcon from '@mui/icons-material/Work';
 import FamilyRestroomIcon from '@mui/icons-material/FamilyRestroom';
 import FlightIcon from '@mui/icons-material/Flight';
-
+import PropTypes from 'prop-types';
 const categories = [
   {
     id: 'civil_rights',
@@ -24,8 +15,8 @@ const categories = [
     questions: [
       'What are my basic civil rights?',
       'How can I file a discrimination complaint?',
-      'What should I do if my rights are violated?'
-    ]
+      'What should I do if my rights are violated?',
+    ],
   },
   {
     id: 'business_law',
@@ -35,8 +26,8 @@ const categories = [
     questions: [
       'How do I register a new business?',
       'What contracts do I need for my startup?',
-      'How do I protect my intellectual property?'
-    ]
+      'How do I protect my intellectual property?',
+    ],
   },
   {
     id: 'housing',
@@ -46,8 +37,8 @@ const categories = [
     questions: [
       'What are my rights as a tenant?',
       'How do I handle a landlord dispute?',
-      "What's the eviction process in my state?"
-    ]
+      "What's the eviction process in my state?",
+    ],
   },
   {
     id: 'employment',
@@ -57,8 +48,8 @@ const categories = [
     questions: [
       'What are my workplace rights?',
       'How do I file a workplace complaint?',
-      "What's included in employment contracts?"
-    ]
+      "What's included in employment contracts?",
+    ],
   },
   {
     id: 'family_law',
@@ -68,8 +59,8 @@ const categories = [
     questions: [
       'How does divorce process work?',
       'What are child custody rights?',
-      'How do I file for child support?'
-    ]
+      'How do I file for child support?',
+    ],
   },
   {
     id: 'immigration',
@@ -79,28 +70,26 @@ const categories = [
     questions: [
       'How do I apply for a visa?',
       "What's the citizenship process?",
-      'What are my rights as an immigrant?'
-    ]
-  }
+      'What are my rights as an immigrant?',
+    ],
+  },
 ];
-
 const LegalCategories = ({ onCategorySelect, onQuestionSelect, selectedCategory }) => {
   return (
     <Box sx={{ width: '100%', mb: 4 }}>
       <Typography variant="h6" gutterBottom>
         Select a Category
       </Typography>
-      
-      <ButtonGroup 
-        variant="outlined" 
-        sx={{ 
-          display: 'flex', 
-          flexWrap: 'wrap', 
-          gap: 1, 
-          mb: 3 
+      <ButtonGroup
+        variant="outlined"
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 1,
+          mb: 3,
         }}
       >
-        {categories.map((category) => (
+        {categories.map(category => (
           <Button
             key={category.id}
             onClick={() => onCategorySelect(category)}
@@ -112,14 +101,13 @@ const LegalCategories = ({ onCategorySelect, onQuestionSelect, selectedCategory 
               '&:hover': {
                 bgcolor: `${category.color}20`,
                 borderColor: category.color,
-              }
+              },
             }}
           >
             {category.name}
           </Button>
         ))}
       </ButtonGroup>
-
       {selectedCategory && (
         <Card variant="outlined">
           <CardContent>
@@ -138,7 +126,7 @@ const LegalCategories = ({ onCategorySelect, onQuestionSelect, selectedCategory 
                     textAlign: 'left',
                     '&:hover': {
                       bgcolor: 'primary.lighter',
-                    }
+                    },
                   }}
                 >
                   {question}
@@ -152,4 +140,14 @@ const LegalCategories = ({ onCategorySelect, onQuestionSelect, selectedCategory 
   );
 };
 
-export default LegalCategories; 
+// Define PropTypes
+LegalCategories.propTypes = {
+  /** TODO: Add description */
+  onCategorySelect: PropTypes.any,
+  /** TODO: Add description */
+  onQuestionSelect: PropTypes.any,
+  /** TODO: Add description */
+  selectedCategory: PropTypes.any,
+};
+
+export default LegalCategories;

@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import PropTypes from 'prop-types';
 
 const ContractForm = ({ open, onClose, onGenerate, template, loading }) => {
   const [formData, setFormData] = React.useState({});
@@ -26,7 +27,7 @@ const ContractForm = ({ open, onClose, onGenerate, template, loading }) => {
     }
   }, [open]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
     setError(null);
 
@@ -40,22 +41,17 @@ const ContractForm = ({ open, onClose, onGenerate, template, loading }) => {
     onGenerate(template.title, formData);
   };
 
-  const handleChange = (field) => (event) => {
+  const handleChange = field => event => {
     setFormData(prev => ({
       ...prev,
-      [field]: event.target.value
+      [field]: event.target.value,
     }));
   };
 
   if (!template) return null;
 
   return (
-    <Dialog
-      open={open}
-      onClose={() => !loading && onClose()}
-      maxWidth="sm"
-      fullWidth
-    >
+    <Dialog open={open} onClose={() => !loading && onClose()} maxWidth="sm" fullWidth>
       <DialogTitle>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Typography variant="h6">Generate {template.title}</Typography>
@@ -71,7 +67,7 @@ const ContractForm = ({ open, onClose, onGenerate, template, loading }) => {
               {error}
             </Alert>
           )}
-          {template.fields?.map((field) => (
+          {template.fields?.map(field => (
             <TextField
               key={field}
               fullWidth
@@ -102,4 +98,19 @@ const ContractForm = ({ open, onClose, onGenerate, template, loading }) => {
   );
 };
 
-export default ContractForm; 
+
+// Define PropTypes
+ContractForm.propTypes = {
+  /** TODO: Add description */
+  open: PropTypes.any,
+  /** TODO: Add description */
+  onClose: PropTypes.any,
+  /** TODO: Add description */
+  onGenerate: PropTypes.any,
+  /** TODO: Add description */
+  template: PropTypes.any,
+  /** TODO: Add description */
+  loading: PropTypes.any,
+};
+
+export default ContractForm;

@@ -12,7 +12,7 @@ import {
   ListItemIcon,
   ListItemText,
   Chip,
-  Container
+  Container,
 } from '@mui/material';
 import PageLayout from '../components/PageLayout';
 import GavelIcon from '@mui/icons-material/Gavel';
@@ -32,7 +32,7 @@ const services = [
     description: 'Professional legal advice and consultation services.',
     features: ['One-on-one consultation', 'Case evaluation', 'Legal strategy planning'],
     color: '#1976d2',
-    path: '/legal-chat'
+    path: '/legal-chat',
   },
   {
     title: 'Document Review',
@@ -40,7 +40,7 @@ const services = [
     description: 'Expert review of legal documents and contracts.',
     features: ['Contract analysis', 'Document verification', 'Legal compliance check'],
     color: '#2e7d32',
-    path: '/contracts'
+    path: '/contracts',
   },
   {
     title: 'Legal Representation',
@@ -48,7 +48,7 @@ const services = [
     description: 'Professional representation for your legal matters.',
     features: ['Court representation', 'Case management', 'Legal advocacy'],
     color: '#ed6c02',
-    path: '/legal-chat'
+    path: '/legal-chat',
   },
   {
     title: 'Educational Resources',
@@ -56,7 +56,7 @@ const services = [
     description: 'Learn about your legal rights and responsibilities.',
     features: ['Legal guides', 'Educational materials', 'Rights information'],
     color: '#9c27b0',
-    path: '/resources'
+    path: '/resources',
   },
   {
     title: 'Translation Services',
@@ -64,7 +64,7 @@ const services = [
     description: 'Legal document translation and interpretation.',
     features: ['Document translation', 'Live interpretation', 'Multi-language support'],
     color: '#0288d1',
-    path: '/legal-chat'
+    path: '/legal-chat',
   },
   {
     title: 'Support Services',
@@ -72,8 +72,8 @@ const services = [
     description: 'Ongoing support throughout your legal journey.',
     features: ['24/7 assistance', 'Case tracking', 'Status updates'],
     color: '#7b1fa2',
-    path: '/legal-chat'
-  }
+    path: '/legal-chat',
+  },
 ];
 
 function Services() {
@@ -88,25 +88,27 @@ function Services() {
       <Grid container spacing={4} sx={{ mb: 8 }}>
         {services.map((service, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card 
-              sx={{ 
+            <Card
+              sx={{
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 transition: 'transform 0.2s',
                 '&:hover': {
                   transform: 'translateY(-4px)',
-                  boxShadow: 4
-                }
+                  boxShadow: 4,
+                },
               }}
             >
               <CardContent sx={{ flexGrow: 1 }}>
-                <Box sx={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  mb: 2,
-                  gap: 1
-                }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    mb: 2,
+                    gap: 1,
+                  }}
+                >
                   {service.icon}
                   <Typography variant="h6" component="div">
                     {service.title}
@@ -128,17 +130,17 @@ function Services() {
                 </Box>
               </CardContent>
               <Box sx={{ p: 2, pt: 0 }}>
-                <Button 
-                  variant="outlined" 
+                <Button
+                  variant="outlined"
                   fullWidth
                   onClick={() => navigate(service.path)}
-                  sx={{ 
-                    borderColor: service.color, 
+                  sx={{
+                    borderColor: service.color,
                     color: service.color,
                     '&:hover': {
                       borderColor: service.color,
-                      bgcolor: `${service.color}08`
-                    }
+                      bgcolor: `${service.color}08`,
+                    },
                   }}
                 >
                   Learn More
@@ -155,12 +157,11 @@ function Services() {
           <Grid item xs={12} md={8}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
               <HandshakeIcon sx={{ fontSize: 40 }} />
-              <Typography variant="h5">
-                Our Pro Bono Commitment
-              </Typography>
+              <Typography variant="h5">Our Pro Bono Commitment</Typography>
             </Box>
             <Typography paragraph>
-              We believe everyone deserves access to quality legal services. Our pro bono program provides free legal assistance to those who need it most.
+              We believe everyone deserves access to quality legal services. Our pro bono program
+              provides free legal assistance to those who need it most.
             </Typography>
             <List>
               <ListItem>
@@ -188,12 +189,12 @@ function Services() {
               variant="contained"
               size="large"
               onClick={() => navigate('/legal-chat')}
-              sx={{ 
+              sx={{
                 bgcolor: 'white',
                 color: 'primary.main',
                 '&:hover': {
-                  bgcolor: 'rgba(255, 255, 255, 0.9)'
-                }
+                  bgcolor: 'rgba(255, 255, 255, 0.9)',
+                },
               }}
             >
               Get Started Now

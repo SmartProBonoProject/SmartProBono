@@ -1,16 +1,24 @@
 import { useState } from 'react';
-import { 
-  Grid, Card, CardContent, Typography, Button, 
-  Dialog, TextField, Tab, Tabs, Box, IconButton,
-  InputAdornment, CircularProgress, Alert
+import {
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Dialog,
+  TextField,
+  Tab,
+  Tabs,
+  Box,
+  IconButton,
+  InputAdornment,
+  CircularProgress,
+  Alert,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import ContractForm from './ContractForm';
-import axios from 'axios';
 import config from '../config';
-
 const ContractTemplates = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [category, setCategory] = useState(0);
@@ -19,94 +27,85 @@ const ContractTemplates = () => {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
   const categories = [
-    "All",
-    "Business",
-    "Employment",
-    "Real Estate",
-    "Personal",
-    "Legal",
-    "Technology",
-    "Healthcare"
+    'All',
+    'Business',
+    'Employment',
+    'Real Estate',
+    'Personal',
+    'Legal',
+    'Technology',
+    'Healthcare',
   ];
-
   const templates = [
     {
-      title: "Last Will and Testament",
-      category: "Personal",
-      description: "Template for creating a last will and testament",
+      title: 'Last Will and Testament',
+      category: 'Personal',
+      description: 'Template for creating a last will and testament',
       fields: ['Testator Name', 'Executor Name', 'Beneficiaries', 'Assets'],
-      languages: ['English']
+      languages: ['English'],
     },
     {
-      title: "Power of Attorney",
-      category: "Legal",
-      description: "Legal document granting authority to act on behalf of another",
+      title: 'Power of Attorney',
+      category: 'Legal',
+      description: 'Legal document granting authority to act on behalf of another',
       fields: ['Principal Name', 'Agent Name', 'Powers Granted', 'Effective Date'],
-      languages: ['English']
+      languages: ['English'],
     },
     {
-      title: "Rental Agreement",
-      category: "Real Estate",
-      description: "Property rental contract",
+      title: 'Rental Agreement',
+      category: 'Real Estate',
+      description: 'Property rental contract',
       fields: ['Landlord', 'Tenant', 'Property Address', 'Rent Amount', 'Term'],
-      languages: ['English', 'Spanish', 'French']
+      languages: ['English', 'Spanish', 'French'],
     },
     {
-      title: "Employment Contract",
-      category: "Employment",
-      description: "Standard employment agreement template",
+      title: 'Employment Contract',
+      category: 'Employment',
+      description: 'Standard employment agreement template',
       fields: ['Employer', 'Employee', 'Position', 'Salary', 'Start Date'],
-      languages: ['English', 'Spanish']
+      languages: ['English', 'Spanish'],
     },
     {
-      title: "Non-Disclosure Agreement",
-      category: "Business",
-      description: "Confidentiality agreement for business purposes",
+      title: 'Non-Disclosure Agreement',
+      category: 'Business',
+      description: 'Confidentiality agreement for business purposes',
       fields: ['Party A', 'Party B', 'Confidential Information', 'Duration'],
-      languages: ['English']
+      languages: ['English'],
     },
     {
-      title: "Service Agreement",
-      category: "Business",
-      description: "Professional service contract template",
+      title: 'Service Agreement',
+      category: 'Business',
+      description: 'Professional service contract template',
       fields: ['Provider Name', 'Client Name', 'Service Details', 'Payment Terms'],
-      languages: ['English', 'Spanish', 'French']
-    }
+      languages: ['English', 'Spanish', 'French'],
+    },
   ];
-
-  const handleSearch = (event) => {
+  const handleSearch = event => {
     setSearchQuery(event.target.value);
   };
-
   const handleCategoryChange = (event, newValue) => {
     setCategory(newValue);
   };
-
   const filteredTemplates = templates.filter(template => {
     const matchesSearch = template.title.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = category === 0 || template.category === categories[category];
     return matchesSearch && matchesCategory;
   });
-
-  const handleGenerateClick = (template) => {
+  const handleGenerateClick = template => {
     setSelectedTemplate(template);
     setOpen(true);
   };
-
-  const handleExportPDF = async (e) => {
+  const handleExportPDF = async e => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
     try {
       // Validate required fields
       const missingFields = selectedTemplate.fields.filter(field => !formData[field]);
       if (missingFields.length > 0) {
         throw new Error(`Please fill in all required fields: ${missingFields.join(', ')}`);
       }
-
       // Make API call to generate contract
       const response = await fetch(`${config.apiUrl}/api/contracts/generate`, {
         method: 'POST',
@@ -115,29 +114,28 @@ const ContractTemplates = () => {
         },
         body: JSON.stringify({
           template: selectedTemplate.title.toLowerCase().replace(/\s+/g, '_'),
-          formData: formData
+          formData: formData,
         }),
         // Important for receiving PDF data
-        responseType: 'blob'
+        responseType: 'blob',
       });
-
       if (!response.ok) {
         throw new Error('Failed to generate contract');
       }
-
       // Create a blob from the PDF data
       const blob = await response.blob();
-      
       // Create a link to download the PDF
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `${selectedTemplate.title.toLowerCase().replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`);
+      link.setAttribute(
+        'download',
+        `${selectedTemplate.title.toLowerCase().replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`
+      );
       document.body.appendChild(link);
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
-
       setOpen(false);
       setFormData({});
     } catch (err) {
@@ -147,14 +145,12 @@ const ContractTemplates = () => {
       setLoading(false);
     }
   };
-
-  const handleFormChange = (e) => {
+  const handleFormChange = e => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
-
   return (
     <Box>
       {/* Search and Categories */}
@@ -174,8 +170,8 @@ const ContractTemplates = () => {
             ),
           }}
         />
-        <Tabs 
-          value={category} 
+        <Tabs
+          value={category}
           onChange={handleCategoryChange}
           variant="scrollable"
           scrollButtons="auto"
@@ -185,7 +181,6 @@ const ContractTemplates = () => {
           ))}
         </Tabs>
       </Box>
-
       {/* Templates Grid */}
       <Grid container spacing={3}>
         {filteredTemplates.map((template, index) => (
@@ -215,8 +210,8 @@ const ContractTemplates = () => {
                       bgcolor: template.color,
                       '&:hover': {
                         bgcolor: template.color,
-                        filter: 'brightness(0.9)'
-                      }
+                        filter: 'brightness(0.9)',
+                      },
                     }}
                   >
                     Generate
@@ -227,7 +222,6 @@ const ContractTemplates = () => {
           </Grid>
         ))}
       </Grid>
-
       {/* Contract Form Dialog */}
       <ContractForm
         open={open}
@@ -239,5 +233,4 @@ const ContractTemplates = () => {
     </Box>
   );
 };
-
 export default ContractTemplates;

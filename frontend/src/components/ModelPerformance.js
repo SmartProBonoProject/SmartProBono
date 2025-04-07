@@ -26,7 +26,7 @@ const ModelPerformance = () => {
     // Refresh every 5 minutes
     const interval = setInterval(fetchPerformanceData, 300000);
     return () => clearInterval(interval);
-  }, [selectedModel]);
+  }, [selectedModel, fetchPerformanceData]);
 
   const fetchPerformanceData = async () => {
     try {
@@ -79,10 +79,10 @@ const ModelPerformance = () => {
           <InputLabel>Select Model</InputLabel>
           <Select
             value={selectedModel}
-            onChange={(e) => setSelectedModel(e.target.value)}
+            onChange={e => setSelectedModel(e.target.value)}
             label="Select Model"
           >
-            {models.map((model) => (
+            {models.map(model => (
               <MenuItem key={model} value={model}>
                 {model.charAt(0).toUpperCase() + model.slice(1)}
               </MenuItem>
@@ -100,28 +100,17 @@ const ModelPerformance = () => {
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <MetricCard
-            title="Success Rate"
-            value={performanceData.success_rate}
-            unit="%"
-          />
+          <MetricCard title="Success Rate" value={performanceData.success_rate} unit="%" />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <MetricCard
-            title="Total Requests"
-            value={performanceData.total_requests}
-          />
+          <MetricCard title="Total Requests" value={performanceData.total_requests} />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <MetricCard
-            title="Error Rate"
-            value={performanceData.error_rate}
-            unit="%"
-          />
+          <MetricCard title="Error Rate" value={performanceData.error_rate} unit="%" />
         </Grid>
       </Grid>
     </Box>
   );
 };
 
-export default ModelPerformance; 
+export default ModelPerformance;

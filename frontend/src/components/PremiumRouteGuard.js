@@ -1,13 +1,12 @@
 import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Box, Paper, Typography, Button } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import { useTranslation } from 'react-i18next';
-
+import PropTypes from 'prop-types';
 const PremiumRouteGuard = ({ children, isPremium = false }) => {
   const { t } = useTranslation();
   const location = useLocation();
-
   if (!isPremium) {
     return (
       <Box
@@ -35,18 +34,10 @@ const PremiumRouteGuard = ({ children, isPremium = false }) => {
             {t('premium.accessDenied.message')}
           </Typography>
           <Box sx={{ mt: 3 }}>
-            <Button
-              variant="contained"
-              color="primary"
-              href="/subscription"
-              sx={{ mr: 2 }}
-            >
+            <Button variant="contained" color="primary" href="/subscription" sx={{ mr: 2 }}>
               {t('premium.upgrade')}
             </Button>
-            <Button
-              variant="outlined"
-              onClick={() => window.history.back()}
-            >
+            <Button variant="outlined" onClick={() => window.history.back()}>
               {t('common.goBack')}
             </Button>
           </Box>
@@ -54,8 +45,15 @@ const PremiumRouteGuard = ({ children, isPremium = false }) => {
       </Box>
     );
   }
-
   return children;
 };
 
-export default PremiumRouteGuard; 
+// Define PropTypes
+PremiumRouteGuard.propTypes = {
+  /** TODO: Add description */
+  children: PropTypes.any,
+  /** TODO: Add description */
+  isPremium: PropTypes.any,
+};
+
+export default PremiumRouteGuard;
