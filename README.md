@@ -1,5 +1,11 @@
 # Smart Pro Bono App
 
+<!-- repo-intro:start -->
+**Project snapshot:** An earlier SmartProBono organization-level platform build exploring client/attorney accounts, case management, scheduling, document sharing, real-time communication, and legal-assistance workflows.
+
+**What it demonstrates:** React · Flask · Socket.IO · JWT auth · SQLAlchemy · full-stack legal-tech prototyping.
+<!-- repo-intro:end -->
+
 A comprehensive platform designed to connect legal professionals with individuals in need of pro bono legal assistance. This application streamlines the process of matching attorneys with clients, managing cases, scheduling appointments, and providing legal resources.
 
 ## Features
