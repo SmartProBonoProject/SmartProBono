@@ -1,40 +1,25 @@
-# Dependencies
-venv/
+# Dependencies and generated state
 node_modules/
+venv/
+.venv/
+.venv*/
 __pycache__/
-
-# Environment files
-.env
-.env.local
-.env.development
-.env.test
-.env.production
-backend/.env
-frontend/.env
-frontend/.env.*
-
-# Build files
-/build
-/dist
-
-# IDE files
+*.py[cod]
+# Credentials and environment
+.env*
+!.env.example
+*.key
+# Databases and generated sensitive documents
+*.db
+*.sqlite
+*.sqlite3
+backend/data/generated_pdfs/
+*lease_agreement*.pdf
+# Builds and local files
+/build/
+/dist/
 .vscode/
 .idea/
-*.swp
-*.swo
-
-# OS files
+*.log
 .DS_Store
 Thumbs.db
-
-# Misc
-*.log
-*.pyc
-__pycache__/
-*.pyo
-*.pyd
-.Python
-*.so
-
-Miniforge3-MacOSX-arm64.sh
-Miniforge3-MacOSX-arm64.sh
